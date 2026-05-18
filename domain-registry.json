@@ -1,0 +1,51 @@
+{
+  "domains": {
+    "软件工程": {
+      "template": "software-engineering",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["机会验证","需求锐化","方案设计","设计评审","架构评审","执行规划","任务拆解","开发实现","代码审查","质量测试","交付验收","复盘迭代"]
+    },
+    "学术科研": {
+      "template": "academic-research",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["选题验证","文献综述","研究设计","方法论审查","数据收集","初稿撰写","论证审查","格式规范","查重原创性","终稿打磨","提交验收","复盘迭代"]
+    },
+    "金融商业": {
+      "template": "finance-business",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["需求确认","合规审查","风控评估","数据验证","分析建模","回测验证","报告生成","合规复审","交付验收","复盘迭代"],
+      "risk_disclaimer": true
+    },
+    "文创创作": {
+      "template": "creative-works",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["灵感发散","方向收敛","初稿生成","风格打磨","受众测试","精修润色","终稿审定","发布交付","复盘迭代"]
+    },
+    "法律政务": {
+      "template": "legal-government",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["需求确认","法规检索","模板匹配","条款审查","格式合规","风险标注","终稿审定","交付验收","复盘迭代"],
+      "legal_disclaimer": true
+    },
+    "生活事务": {
+      "template": "life-tasks",
+      "created": "2026-05-18",
+      "usage_count": 1,
+      "parent_workflow": "idea-foundry-v5",
+      "phases": ["需求梳理","方案设计","资源确认","执行清单","执行跟踪","交付验收","复盘迭代"]
+    }
+  },
+  "version": "5.0.0",
+  "last_evolved": null,
+  "evolution_log": []
+}

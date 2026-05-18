@@ -1,0 +1,16 @@
+{
+  "version": "8.1.1",
+  "global_priority": {
+    "foundry": {"level": 110, "role": "global_orchestrator", "description": "全局调度中枢·最先触发·接管所有工作流调度"},
+    "superpowers": {"level": 100, "role": "fallback_capability_skill", "mapped_to": "CAP:PLAN"},
+    "gstack_autoplan": {"level": 90, "role": "fallback_capability_skill", "mapped_to": "CAP:SHARPEN+DESIGN_REVIEW+ARCH_REVIEW"},
+    "native_brainstorming_tdd": {"level": 50, "role": "fallback_capability_skill"},
+    "external_native_workflows": {"level": 20, "role": "last_resort_fallback"},
+    "manual_guided_mode": {"level": 0, "role": "ultimate_fallback"}
+  },
+  "dispatch_rules": {
+    "trigger_priority": "idea-foundry always triggers first before any other workflow engine",
+    "sub_skill_delegation": "foundry matches capabilities → delegates to best-scored skill",
+    "external_workflow_fallback": "only when foundry degradation chain is fully exhausted"
+  }
+}

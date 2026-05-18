@@ -1,0 +1,24 @@
+{
+  "version": "7.0.0",
+  "capabilities": {
+    "critical": ["VALIDATE","SHARPEN","DESIGN","PLAN","IMPLEMENT","VERIFY"],
+    "important": ["DESIGN_REVIEW","ARCH_REVIEW","BREAKDOWN","TDD_ENFORCE","DEBUG","CODE_REVIEW","SECURITY_SCAN","BROWSER_TEST","SECURITY_AUDIT","SHIP","CONTEXT_SAVE"],
+    "nice_to_have": ["DX_REVIEW","SECOND_OPINION","CODE_HEALTH","DOCUMENT","RETRO","LEARN"],
+    "industry": ["ACADEMIC_REVIEW","FINANCE_COMPLY","LEGAL_REVIEW","CREATIVE_POLISH","PHOTO_CHECK"]
+  },
+  "degradation_chains": {
+    "VALIDATE": ["office-hours","plan-ceo-review","brainstorming"],
+    "BROWSER_TEST": ["qa","qa-only","playwright-skill","browser"],
+    "IMPLEMENT": ["tdd","test-driven-development"],
+    "DEBUG": ["systematic-debugging","investigate"],
+    "CODE_REVIEW": ["review","codex","requesting-code-review"],
+    "DESIGN": ["brainstorming","design-consultation","idea-superpowers-suite"]
+  },
+  "selection_priority": [
+    "same_ecosystem",
+    "matt_pocock_over_superpowers",
+    "specialized_over_general",
+    "newer_version",
+    "safe_over_risky"
+  ]
+}

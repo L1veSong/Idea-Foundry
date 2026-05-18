@@ -1,0 +1,35 @@
+{
+  "version": "6.0.0",
+  "tags": {
+    "engineering": {
+      "web": {"trunk": "web-fullstack", "description": "Web全栈应用(前端+后端+DB)", "usage": 0},
+      "frontend": {"trunk": "web-frontend", "description": "纯前端/UI", "usage": 0},
+      "backend": {"trunk": "backend-api", "description": "纯后端/API/服务", "usage": 0},
+      "cli": {"trunk": "cli-tool", "description": "命令行工具", "usage": 0},
+      "data": {"trunk": "data-pipeline", "description": "数据管道/ETL/ML", "usage": 0},
+      "mobile": {"trunk": "mobile-app", "description": "移动App", "usage": 0},
+      "devops": {"trunk": "devops-infra", "description": "运维/CI/CD", "usage": 0},
+      "sdk": {"trunk": "sdk-library", "description": "SDK/库/插件", "usage": 0},
+      "algorithm": {"trunk": "algorithm-pure", "description": "纯算法/数学", "usage": 0},
+      "embedded": {"trunk": "embedded-iot", "description": "嵌入式/物联网", "usage": 0}
+    },
+    "industry": {
+      "photography": {"plugins": ["visual-check", "color-management", "composition-rules", "copyright-metadata"], "usage": 0},
+      "finance": {"plugins": ["compliance-review", "risk-assessment", "backtest-validation", "disclaimer-mandatory"], "usage": 1},
+      "academic": {"plugins": ["literature-review", "methodology-check", "plagiarism-check", "format-compliance", "academic-language"], "usage": 1},
+      "legal": {"plugins": ["regulation-search", "clause-review", "format-compliance", "risk-annotation", "disclaimer-mandatory"], "usage": 0},
+      "creative": {"plugins": ["brainstorm-divergent", "style-consistency", "audience-test", "humanizer-polish"], "usage": 0},
+      "business": {"plugins": ["business-model", "competitive-matrix", "market-sizing", "financial-projection"], "usage": 0},
+      "medical": {"plugins": ["evidence-based-check", "ethics-review", "clinical-validation", "data-privacy"], "usage": 0},
+      "education": {"plugins": ["learning-objectives", "cognitive-hierarchy", "assessment-criteria", "accessibility"], "usage": 0},
+      "gaming": {"plugins": ["gameplay-validation", "balance-check", "ux-benchmark", "performance-target"], "usage": 0},
+      "music": {"plugins": ["harmony-rules", "arrangement-framework", "copyright-check", "audio-quality"], "usage": 0}
+    }
+  },
+  "scoring": {
+    "dimensions": ["keyword_match", "output_form", "domain_knowledge_density", "constraint_type"],
+    "primary_threshold": 0.5,
+    "secondary_threshold": 0.3
+  },
+  "evolution_log": []
+}

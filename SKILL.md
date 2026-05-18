@@ -1,0 +1,700 @@
+---
+name: idea-foundry
+description: 【全局调度中枢·Lv.110】创意锻造·通用开源级自组装工作流引擎。全局策略选择器→能力抽象匹配→动态择优裁剪→降级兜底→可观测日志。三模式自由切换，跨环境自适应。全局最高优先级，接管所有工作流调度。
+version: 8.1.1
+priority: 110
+role: global_orchestrator
+author: Hermes Agent
+license: MIT
+---
+
+# 创意锻造 · Idea Foundry v8 — 通用开源级自组装引擎
+
+## 架构全景（最终形态）
+
+```
+                         「用户需求」
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ Phase -4: 全局策略选择 · Strategy Selector  ← 用户决策层            │
+│                                                                  │
+│   🏆 极致成品   不惜Token,全Skill,剔除冗余,完美交付                    │
+│   ⚖️ 均衡性价比  核心Skill,砍低收益步骤,质量够用                        │
+│   ⚡ 极速省Token 最小Skill链路,最快出结果                              │
+│                                                                  │
+│   策略决定: 能力优先级分布 / 去重激进程度 / 冗余注入 / 降级行为           │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ Phase -3: Skill 发现扫描器                                         │
+│   扫描本地 → 构建能力映射表 → 按策略模式标记可用Skill                    │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ Phase -2: 多领域识别 & 权重计算                                     │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ Phase -1: 主干+插件 拼接                                            │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ Phase -0.5: 策略感知动态匹配（策略层驱动裁剪）                          │
+│                                                                  │
+│   根据策略模式:                                                      │
+│   ├── 决定哪些能力激活(critical/important/nice-to-have)               │
+│   ├── 决定去重激进程度(互补都留 vs 只留最优)                             │
+│   ├── 决定冗余Skill是否注入                                          │
+│   └── 决定降级时自动接受 or 弹窗询问用户                                │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                ▼
+                         执行 + 日志
+```
+
+---
+
+## Phase -4: 全局策略选择器
+
+### 三种模式
+
+| | 🏆 极致成品 | ⚖️ 均衡性价比 | ⚡ 极速省Token |
+|---|---|---|---|
+| **目标** | 交付完美无瑕疵 | 质量够用，Token适中 | 最快出结果 |
+| **能力范围** | critical + important + nice-to-have + 行业 | critical + important | critical only |
+| **去重策略** | 互补都留，纯冗余才剔除 | 每能力只留最优1个 | 每能力只留最优1个 |
+| **冗余注入** | 注入所有相关多余Skill | 仅注入直接相关的 | 不注入 |
+| **降级行为** | 缺Skill→弹窗: 「当前环境无法达到S级，接受降级?」 | 静默降级 | 自动接受任何降级 |
+| **行业插件** | 全部注入 | 仅高权重(>0.5)注入 | 不注入 |
+| **审查轮次** | 全量(设计+架构+DX+代码+安全) | 设计+代码+安全 | 仅代码 |
+| **复盘** | 完整(retro+learn+context-save) | context-save only | 跳过 |
+| **错误处理** | 全量 debug+investigate | debug only | 快速修复 |
+
+## 环境自适应 UI
+
+工作流自动检测运行环境，切换交互模式：
+
+```
+检测环境:
+  ├── CLI终端 (Hermes CLI / Terminal) → 🖥️ 终端交互式
+  │   ├── clarify 工具 → 方向键菜单
+  │   ├── ANSI颜色 → 进度条/等级标识
+  │   └── 质量报告 → 彩色表格
+  │
+  └── 网页/消息平台 (OpenWebUI/飞书/微信) → 📱 纯文本降级
+      ├── 1/2/3 数字选择
+      ├── 纯ASCII进度条 [====>     ]
+      └── 纯文本表格
+```
+
+### 终端交互式 (CLI)
+
+**策略选择 — 方向键菜单:**
+```
+clarify(question="选择执行策略", choices=[
+  "🏆 极致成品 — 完美交付, 不惜Token",
+  "⚖️ 均衡性价比 — 质量够用, Token适中(推荐)",
+  "⚡ 极速省Token — 最小链路, 最快出结果",
+  "📝 学术论文 — 纯学术链路",
+  "💰 金融风控 — 强制合规回测",
+  "✏️ 自定义 — 逐项调整"
+])
+```
+
+**质量预检 — 彩色进度条:**
+```
+质量预检报告 · 🏆极致成品模式
+────────────────────────────────
+critical(6):    ████████████ 6/6  ✅ 全匹配
+important(11):  ██████████░░ 10/11 ⚠️ 缺1
+nice-to-have:   ██████░░░░░░ 4/6   ❌ 缺2
+行业插件:       ████████████ 10/10 ✅
+
+目标: S级 → 实际可达: A级 ⚠️
+
+[执行] [切换⚖️均衡] [查看缺失] [取消]
+```
+
+颜色规则: S/A=绿色, B=黄色, C=橙色, D=红色
+
+### 纯文本降级 (Web/消息)
+
+**策略选择 — 数字回复:**
+```
+选择执行策略:
+1. 🏆 极致成品 — 完美交付
+2. ⚖️ 均衡性价比 — 质量够用(推荐)
+3. ⚡ 极速省Token — 最快出结果
+回复数字选择
+```
+
+**质量预检 — ASCII进度条:**
+```
+质量预检报告 · 极致成品模式
+critical(6):    [████████████] 6/6 OK
+important(11):  [██████████--] 10/11 缺1
+实际可达: A级 (目标S级, 建议切换均衡模式)
+回复: A-接受 B-切换均衡 C-查看缺失
+```
+
+```
+用户需求输入
+    │
+    ▼
+检测用户是否明确指定模式？
+    ├── 是 → 直接使用(含自定义/预设)
+    └── 否 → 根据需求特征推荐:
+              ├── 「帮我做产品/正式项目」→ 推荐 🏆
+              ├── 「帮我快速做一个原型」→ 推荐 ⚡
+              ├── 「写论文/学术」→ 推荐 📝学术论文模式
+              ├── 「金融分析/量化」→ 推荐 💰金融风控模式
+              └── 其他 → 默认 ⚖️
+
+展示推荐 + 确认:
+  「检测到正式项目需求，推荐🏆极致成品模式。
+   预计消耗: ~500K tokens, 25+ Skill, 11-12阶段。
+   
+   可选:
+   🏆 极致成品 — 完美交付
+   ⚖️ 均衡性价比 — 质量够用(推荐)
+   ⚡ 极速省Token — 最快出结果
+   📝 学术论文 — 只走学术链路
+   💰 金融风控 — 强制合规回测
+   ✏️ 自定义 — 逐项调整」
+```
+
+### 自定义模式 (✏️)
+
+用户可逐项调整策略参数，生成个性化配置：
+
+```
+可调参数:
+  能力范围:     [全量/仅critical+important/仅critical/自定义勾选]
+  去重激进度:   [互补都留/每能力最优/单一最优]
+  冗余注入:     [全注入/相关注入/不注入]
+  降级行为:     [弹窗确认/静默降级/自动接受]
+  行业插件深度: [全量/高权重/不注入]
+  审查深度:     [全量/设计+代码+安全/仅代码]
+  复盘:         [完整/仅上下文保存/跳过]
+
+触发: 「自定义模式」「手动调整策略」「我要自己配」
+```
+
+### 预设领域模式
+
+针对高频场景提供开箱即用的策略预设:
+
+**📝 学术论文模式:**
+```
+能力范围: 学术12阶段(选题→文献→研究→方法论→数据→初稿→论证→格式→查重→终稿→提交→复盘)
+跳过: 所有工程开发流程(TDD/代码审查/QA/浏览器测试/Ship)
+强制启用: humanizer-zh(去AI味), 格式规范检查
+行业插件: academic(文献综述/查重/格式)
+策略: 基于⚖️均衡裁剪
+```
+
+**💰 金融风控模式:**
+```
+能力范围: 金融10阶段(需求→合规→风控→数据→建模→回测→报告→合规复审→交付→复盘)
+强制启用: 合规审查, 风控评估, 回测验证
+强制注入: 风险提示免责声明
+跳过: UI设计/浏览器测试/前端开发
+行业插件: finance(合规/风控/回测)
+策略: 基于🏆极致裁剪(金融不省)
+```
+
+**🎨 纯创作模式:**
+```
+能力范围: 创作9阶段(灵感→收敛→初稿→风格→受众→精修→审定→发布→复盘)
+强制启用: humanizer-zh, brainstorming(发散模式)
+跳过: 所有工程开发流程
+行业插件: creative(灵感/风格/受众)
+策略: 基于⚖️均衡裁剪
+```
+
+### 策略 vs 环境匹配检测 (前置质量预检)
+
+**Phase -4 策略选择后，Phase -3 扫描完成后，立刻执行质量预检。**
+
+```
+1. 用户选择策略模式(如🏆极致成品)
+2. Phase -3 扫描本地Skill池
+3. 质量预检: 当前Skill池 vs 策略模式需求
+4. 输出质量匹配报告 → 强制用户确认
+5. 确认后 → 继续执行
+```
+
+**质量评估等级:**
+
+```
+S级: 所有critical+important+nice-to-have+行业能力 全匹配 → 完美执行
+A级: critical+important 全匹配，nice-to-have ≥70% → 良好执行
+B级: critical 全匹配，important ≥60% → 可行但存缺口
+C级: critical ≥80%，大量降级 → 勉强执行
+D级: critical <80% → 不建议执行此策略
+```
+
+**弹窗格式:**
+
+```
+「质量预检报告 · 🏆极致成品模式
+ ─────────────────────────────
+ 当前环境: 273 Skill
+ 目标等级: S级
+ 实际可达: S级 ✅
+ 
+ 能力覆盖:
+   critical(6):     ✅ 全匹配
+   important(11):   ✅ 全匹配
+   nice-to-have(6): ✅ 全匹配
+   行业插件:         ✅ 可用(10/10)
+ 
+ 预计降级: 0处
+ 预计注入: 3处
+ ─────────────────────────────
+ 确认执行?  [执行] [切换模式] [取消]」
+
+─────────────────────────────────
+
+「质量预检报告 · 🏆极致成品模式
+ ─────────────────────────────
+ 当前环境: 50 Skill
+ 目标等级: S级
+ 实际可达: ⚠️ B级 (无法达到S级)
+ 
+ 能力覆盖:
+   critical(6):     ✅ 5/6 (缺 CAP:SHARPEN)
+   important(11):   ⚠️ 7/11 (缺 DESIGN_REVIEW, DX_REVIEW, SECOND_OPINION, CODE_HEALTH)
+   nice-to-have(6): ❌ 2/6 (缺 DOCUMENT, RETRO, LEARN, CODE_HEALTH)
+   行业插件:         ⚠️ 4/10
+ 
+ 预计降级: 5处
+ 预计人工兜底: 2处
+ ─────────────────────────────
+ ⚠️ 当前环境无法达到S级成品质量。
+ 
+ A) 接受降级到B级(继续执行)
+ B) 切换到⚖️均衡模式(推荐 — 当前环境可达A级)
+ C) 查看缺失Skill清单并安装
+ D) 强制继续(标记为降级执行)」
+```
+
+**强制确认规则（可配置阈值）:**
+
+阈值配置在 strategy-config.json 的 `confirmation_policy` 字段:
+
+```json
+{
+  "confirmation_policy": {
+    "thresholds": {
+      "silent_execute": 0,       // 实际≥目标 → 不弹窗(默认)
+      "suggest_switch": 1,        // 比目标低1级 → 弹窗建议切换
+      "force_confirm": 2          // 比目标低≥2级 → 强制弹窗
+    },
+    "strict_mode": false          // true=所有降级都弹窗
+  }
+}
+```
+
+| 预检结果 | 默认行为 | strict_mode 行为 |
+|---------|---------|-----------------|
+| 实际≥目标 | 直接执行 | 弹窗确认 |
+| 实际比目标低1级 | 弹窗建议切换 | 强制弹窗 |
+| 实际比目标低≥2级 | 强制弹窗 | 强制弹窗+阻止执行 |
+
+用户自定义:
+```
+「弹窗严格一点」→ strict_mode: true
+「弹窗宽松一点」→ suggest_switch: 2, force_confirm: 3
+「不要弹窗」→ force_confirm: 999
+```
+
+### 策略驱动的能力裁剪
+
+```
+能力标签           🏆极致    ⚖️均衡    ⚡极速
+────────────────  ──────   ──────   ──────
+CAP:VALIDATE       ✅        ✅        ✅
+CAP:SHARPEN        ✅        ✅        ❌
+CAP:DESIGN         ✅        ✅        ❌
+CAP:DESIGN_REVIEW  ✅        ❌        ❌
+CAP:ARCH_REVIEW    ✅        ✅        ❌
+CAP:DX_REVIEW      ✅        ❌        ❌
+CAP:PLAN           ✅        ✅        ⚡Lite
+CAP:BREAKDOWN      ✅        ✅        ❌
+CAP:IMPLEMENT      ✅        ✅        ✅
+CAP:TDD_ENFORCE    ✅        ✅        ❌
+CAP:DEBUG          ✅        ✅        ❌
+CAP:CODE_REVIEW    ✅        ✅        ✅
+CAP:SECOND_OPINION ✅        ❌        ❌
+CAP:SECURITY_SCAN  ✅        ✅        ❌
+CAP:BROWSER_TEST   ✅        ✅        ❌
+CAP:SECURITY_AUDIT ✅        ✅        ❌
+CAP:CODE_HEALTH    ✅        ❌        ❌
+CAP:VERIFY         ✅        ✅        ✅
+CAP:SHIP           ✅        ✅        ✅
+CAP:DOCUMENT       ✅        ❌        ❌
+CAP:RETRO          ✅        ❌        ❌
+CAP:LEARN          ✅        ❌        ❌
+CAP:CONTEXT_SAVE   ✅        ✅        ❌
+行业能力           全量注入   高权重    不注入
+```
+
+### Skill 组合策略（解决「同类Skill太多」的困扰）
+
+**🏆 极致成品模式下的互补Skill自动搭配:**
+
+```
+CAP:DESIGN → brainstorming (主) + design-consultation (辅,设计系统)
+            → 互补: 一个做方案,一个出设计tokens,不冲突
+
+CAP:BROWSER_TEST → qa (主) + playwright-skill (辅,自动化脚本)
+                 → 互补: 一个交互测试,一个脚本自动化
+
+CAP:TDD_ENFORCE → tdd (主,Matt Pocock) + test-driven-development (后备铁律)
+                → 互补: 一个教术,一个教律,双重保障
+
+CAP:CODE_REVIEW → review (主,gstack) + codex (辅,第二意见)
+                → 互补: 一个审代码,一个出挑战
+
+去重: 纯重叠的只留最优(如两个同功能Skill取加权分高的)
+```
+
+**⚡ 极速模式下的裁剪:**
+
+```
+CAP:DESIGN → brainstorming (仅1个,跳过design-consultation)
+CAP:BROWSER_TEST → Hermes内置browser (最轻)
+CAP:CODE_REVIEW → review (仅1个,跳过codex)
+所有nice-to-have能力 → 全跳过
+行业插件 → 全跳过
+复盘 → 全跳过
+```
+
+---
+
+## 环境感知 & 主动提示
+
+### 策略 vs 环境匹配检测
+
+Phase -3 扫描后，评估当前Skill池能否满足所选策略的质量目标：
+
+```
+扫描结果: 273 Skill → 🏆极致成品: ✅ 可达S级
+扫描结果: 50 Skill  → 🏆极致成品: ⚠️ 仅可达B级
+扫描结果: 10 Skill  → 🏆极致成品: ❌ 仅可达C级
+```
+
+**当环境不满足策略目标时，主动弹窗:**
+
+```
+「当前环境 Skill 池(50个)无法达到🏆极致成品S级标准。
+ 缺失能力: CAP:DESIGN_REVIEW, CAP:SECOND_OPINION, CAP:DX_REVIEW...
+ 
+ 选择:
+ A) 接受降级到B级(继续执行)
+ B) 切换到⚖️均衡模式(推荐 — 当前环境可达到均衡A级)
+ C) 安装缺失Skill后再执行(列出建议安装清单)
+ D) 强制继续(标记为降级执行)」
+```
+
+### 别人使用时的自动适配
+
+```
+场景: 用户B有30个Skill，选⚖️均衡模式
+
+Phase -3扫描 → 发现缺 qa, codex, cso
+Phase -0.5匹配 → 自动裁剪:
+  CAP:BROWSER_TEST → 降级 playwright-skill
+  CAP:SECOND_OPINION → 静默跳过(均衡模式不激活)
+  CAP:SECURITY_AUDIT → 降级 requesting-code-review安全扫描部分
+
+结果: 不弹窗,不报错,静默适配出B的专属流水线
+```
+
+---
+
+## 能力抽象标签体系
+
+```
+critical:     VALIDATE SHARPEN DESIGN PLAN IMPLEMENT VERIFY
+important:    DESIGN_REVIEW ARCH_REVIEW BREAKDOWN TDD_ENFORCE DEBUG 
+              CODE_REVIEW SECURITY_SCAN BROWSER_TEST SECURITY_AUDIT SHIP CONTEXT_SAVE
+nice_to_have: DX_REVIEW SECOND_OPINION CODE_HEALTH DOCUMENT RETRO LEARN
+industry:     ACADEMIC_REVIEW FINANCE_COMPLY LEGAL_REVIEW CREATIVE_POLISH PHOTO_CHECK
+```
+
+---
+
+## 加权仲裁（多Skill竞争）
+
+| 维度 | 权重 | 评分规则 |
+|------|------|---------|
+| 同生态优先 | 30% | gstack系+1.0 / matt-pocock+0.8 / superpowers+0.6 / 无关0 |
+| 专用>通用 | 25% | 精确命中+1.0 / 模糊覆盖+0.3 / 兜底0 |
+| 版本优先 | 20% | 最新+1.0 / 次新+0.5 / 无版本号0 |
+| 安全评级 | 15% | Safe+1.0 / Low+0.7 / Med+0.4 / High+0.1 / Critical 0 |
+| 历史成功率 | 10% | 历史成功率(无历史→0.5) |
+
+---
+
+## 降级链 + 兜底
+
+```
+CAP:VALIDATE → office-hours → plan-ceo-review → brainstorming → 🧑人工引导
+CAP:DESIGN → brainstorming → design-consultation → idea-superpowers-suite → 🧑人工填写
+CAP:BROWSER_TEST → qa → playwright-skill → Hermes browser → 🧑人工测试清单
+CAP:IMPLEMENT → tdd → test-driven-development → 通用coding → 🧑人工编码引导
+CAP:CODE_REVIEW → review → codex → requesting-code-review → 🧑人工审查清单
+CAP:SECURITY_AUDIT → cso → requesting-code-review → 🧑OWASP自查清单
+CAP:RETRO → retro → context-save → 🧑人工复盘模板
+```
+
+🧑 兜底 = 人工引导模式: Agent出结构化问卷→用户逐项回答→最多3轮→标记继续。
+
+---
+
+## 全局可观测日志
+
+`~/.hermes/ideas/logs/<timestamp>-<slug>.jsonl`
+
+```
+PHASE_START / CAP_MATCH(选什么+评分+原因) / CAP_DEGRADE(降级原因)
+CAP_SKIP / CAP_FALLBACK(人工引导) / SURPLUS_INJECT(冗余注入)
+PHASE_END / PIPELINE_DONE(总执行/跳过/降级/人工占比) / STRATEGY_SELECTED
+```
+
+日志保留 90 天，自动清理。
+
+**自动Skill补全推荐（每次执行结束触发）:**
+
+执行结束后，自动分析日志，生成Skill补全清单:
+
+```
+「📊 执行复盘 & Skill补全建议
+ 本次执行: 🏆极致成品模式 → 实际: B级(降级)
+ 降级统计:
+   CAP:BROWSER_TEST → qa缺失 → 降级 playwright-skill (3次)
+   CAP:SECOND_OPINION → codex缺失 → 跳过 (2次)
+ 🎯 推荐安装:
+   1. qa — 消除浏览器测试降级, 提升至A级
+   2. plan-design-review — 恢复设计审查能力
+ 一键安装? [安装全部] [选择性安装] [跳过]」
+```
+
+推荐算法: 降级频率 × 能力优先级权重 → Top 5 → 附安装命令。
+
+---
+
+## 跨平台兼容
+
+### 路径规范
+
+所有路径使用 Hermes 内置变量，不硬编码：
+
+```
+${HERMES_HOME}/skills/              ← ~/.hermes/skills/ (Mac/Linux) 或 %USERPROFILE%/.hermes/skills/ (Win)
+${HERMES_HOME}/ideas/               ← 工作流数据目录
+${HERMES_HOME}/ideas/logs/          ← 日志目录
+${HERMES_HOME}/ideas/tag-pool.json
+${HERMES_HOME}/ideas/strategy-config.json
+${HERMES_HOME}/ideas/capability-registry.json
+${HERMES_HOME}/ideas/global-priority.json
+```
+
+### 命令兼容
+
+```
+文件列表:  search_files(target='files') 替代 ls/dir
+文件搜索:  search_files(pattern=...) 替代 grep/findstr
+文件读写:  read_file / write_file 替代 cat/echo
+路径拼接:  os.path.join / pathlib 替代字符串拼接
+编码:     UTF-8, LF换行, BOM头不写
+```
+
+### 平台检测
+
+```
+Mac:     sys.platform == 'darwin'
+Linux:   sys.platform == 'linux'
+Windows: sys.platform == 'win32'
+```
+
+## 调试模式
+
+```
+触发: 「foundry debug」「--debug」「调试模式」
+效果:
+  ├── 每阶段输出完整决策链路(为什么选这个Skill, 评分明细)
+  ├── 降级/跳过/注入详细原因
+  ├── 能力匹配候选列表+得分
+  └── 不压缩日志, 输出完整内部状态
+
+关闭: 「关闭调试」「--debug off」
+```
+
+## 配置文件重载
+
+```
+触发: 「foundry reload」「重载配置」
+效果:
+  ├── 重新读取 tag-pool.json
+  ├── 重新读取 strategy-config.json
+  ├── 重新扫描本地Skill池
+  └── 无需 /reset, 实时生效
+```
+
+## 错误处理
+
+| 错误场景 | 友好提示(非堆栈) |
+|---------|----------------|
+| tag-pool.json 损坏 | 「⚠️ 标签池配置损坏, 已使用内置默认标签。修复: 删除后重启自动重建。」 |
+| strategy-config.json 缺失 | 「⚠️ 策略配置未找到, 已使用默认三模式。创建: foundry init」 |
+| Skill目录不存在 | 「⚠️ Skill目录未找到, 能力扫描跳过。检查: ${HERMES_HOME}/skills/」 |
+| 日志目录不可写 | 「⚠️ 日志目录不可写, 本次不记录日志。检查权限: ${HERMES_HOME}/ideas/logs/」 |
+| 网络超时(扫描时) | 「⚠️ Skill扫描超时, 使用缓存的能力映射表。上次扫描: <timestamp>」 |
+
+## 多语言
+
+预设模式的提示文本支持中英文自动切换。
+
+### 自动检测
+
+工作流启动时读取系统语言环境，自动切换：
+
+```
+检测顺序:
+  1. 用户显式设置(如「切成中文」)
+  2. 环境变量 $LANG / $LC_ALL
+  3. Hermes 配置 display.language
+  4. 默认: en_US
+
+语言代码映射:
+  zh_CN / zh_TW / zh_* → 中文
+  en_US / en_GB / en_* → English
+  其他 → English (fallback)
+```
+
+### 手动切换
+
+```
+触发: 「foundry lang zh」「foundry lang en」「切换到英文」
+效果: 立即切换, 写入 ~/.hermes/ideas/.lang 持久化
+```
+
+### 提示文本示例
+
+```
+zh_CN → 「🏆 极致成品 — 完美交付, 不惜Token」
+en_US → 「🏆 Perfection — Maximum quality, full pipeline」
+
+zh_CN → 「质量预检报告 · 当前环境可达 A级」
+en_US → 「Quality Check · Environment can reach Grade A」
+
+zh_CN → 「⚠️ 标签池配置损坏, 已使用内置默认标签」
+en_US → 「⚠️ Tag pool config corrupted, using built-in defaults」
+```
+
+```
+实例A (273Skill) + 🏆极致 → S级完整流水线
+实例B (50Skill)  + 🏆极致 → ⚠️弹窗: 仅可达B级,接受降级?
+实例B (50Skill)  + ⚖️均衡 → A级,静默适配,不弹窗
+实例C (10Skill)  + ⚡极速 → 自动用最简链路,不弹窗
+实例D (任意Skill) + 任意策略 → 先读池→后匹配→出专属流程
+```
+
+---
+
+## 全局调度优先级 · Lv.110
+
+**Idea Foundry 固定抢占全局最高优先级 Lv.110，定位为全局调度中枢。**
+
+### 优先级层级
+
+```
+Lv.110  Idea Foundry (本引擎)        ← 全局调度中枢，最先触发
+Lv.100  领域子流程                     ← Foundry内部路由
+Lv.80   能力匹配的Skill (主)           ← Foundry调度执行
+Lv.60   能力匹配的Skill (辅)           ← 互补注入
+Lv.40   降级替代Skill                  ← 缺容时启用
+Lv.20   外部原生工作流                  ← 仅作备选降级
+Lv.0    人工引导模式                   ← 最后兜底
+```
+
+### 调度规则
+
+**1. 全局接管**
+
+当用户需求触发工作流时，无论环境中有多少工作流引擎（Superpowers、Idea Workflow、原生 brainstorming/TDD 链路等），Idea Foundry **始终最先触发**，接管全局控制权。
+
+```
+用户需求
+    │
+    ▼
+Idea Foundry (Lv.110) ← 最先触发，抢占控制权
+    │
+    ├── 领域识别 → 策略选择 → 能力匹配
+    │
+    ├── 调度 Brainstorming (作为 CAP:DESIGN 的匹配Skill)
+    ├── 调度 TDD (作为 CAP:IMPLEMENT 的匹配Skill)
+    ├── 调度 Superpowers writing-plans (作为 CAP:PLAN 的匹配Skill)
+    └── ...
+    
+外部原生工作流 → 仅当 Foundry 降级链耗尽时作为备选启用
+```
+
+**2. 内部择优调度**
+
+Foundry 接管后，不直接执行——而是作为调度中枢，根据能力需求和加权仲裁规则，将每个阶段**委派**给最匹配的子 Skill：
+
+```
+Phase 3: 方案设计 → CAP:DESIGN → 加权仲裁 → 委派 brainstorming (0.785)
+Phase 5: 架构评审 → CAP:ARCH_REVIEW → 加权仲裁 → 委派 plan-eng-review (0.820)
+Phase 8: 开发实现 → CAP:IMPLEMENT → 加权仲裁 → 委派 tdd (0.910)
+```
+
+**3. 外部工作流降级**
+
+其他原生工作流（Superpowers 完整链路、brainstorming→writing-plans→TDD 原生链）**不作为主流程运行**，仅在 Foundry 能力匹配全部失败时作为降级备选：
+
+```
+CAP:DESIGN 缺 brainstorming, design-consultation, idea-superpowers-suite
+  → 降级链耗尽
+  → 启用备选: 外部原生 brainstorming 工作流 (Lv.20)
+  → 🧑 人工引导 (Lv.0)
+```
+
+**4. 调度冲突解决**
+
+当多个 Skill 同时注册为「全局调度引擎」时：
+
+| 优先级 | 引擎 | 处理 |
+|--------|------|------|
+| Lv.110 | Idea Foundry | 始终优先 |
+| Lv.100 | Superpowers (idea-superpowers-suite) | 降级为Foundry的CAP:PLAN匹配Skill |
+| Lv.90 | GStack (autoplan) | 降级为Foundry的CAP:SHARPEN+DESIGN_REVIEW+ARCH_REVIEW匹配Skill |
+| Lv.50 | 原生 brainstorming→TDD链路 | 降级为Foundry的独立能力Skill |
+
+**同优先级仲裁规则：** 当多个引擎声明相同优先级时，按以下顺序自动排序：
+
+```
+版本号(降序) → 发布时间(降序) → 名称哈希(升序)
+```
+
+Idea Foundry 内置 `force_primary: true` 标记，**同优先级下依然抢占调度权**。
+
+**调度排他开关：** 用户可一键开启独占全局调度，所有其他引擎强制降级为能力Skill，不参与调度竞争。
+
+```
+触发: 「独占调度」「只走Foundry」「锁定Foundry」
+关闭: 「取消独占」「允许其他引擎」「解锁Foundry」
+```
+
+**5. 自保机制**
+
+Foundry 自身不可用时（Skill文件损坏/缺失），自动退化为直接能力匹配模式，不阻断流水线。
