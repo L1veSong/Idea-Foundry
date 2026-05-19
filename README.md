@@ -141,7 +141,7 @@ idea-foundry/
 
 | 微信 | 支付宝 |
 |------|--------|
-| ![微信](assets/wechat-pay.png) | ![支付宝](assets/alipay-pay.png) |
+| <img src="assets/wechat-pay.png" width="180"> | <img src="assets/alipay-pay.png" width="180"> |
 
 **🌍 International**
 
@@ -152,8 +152,10 @@ idea-foundry/
 | IBAN | AT41 2011 1845 3888 8800 |
 | BIC / SWIFT | GIBAATWWXXX |
 ---
-## 💡 建议与反馈 · Feedback
-有 Bug？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=bug_report.md) · 有想法？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=feature_request.md)
+## 💡 建议与反馈
+有 Bug？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=bug_report.md)
+
+有想法？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=feature_request.md)
 我会认真阅读每一条反馈，择优纳入后续版本迭代。
 ---
 ## License
