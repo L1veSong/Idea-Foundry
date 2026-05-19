@@ -24,7 +24,7 @@ cp "$SCRIPT_DIR/SKILL.md" "$SKILL_DIR/"
 echo "  ✅ SKILL.md"
 
 # 3. Copy configs
-for f in tag-pool.json strategy-config.json capability-registry.json global-priority.json; do
+for f in tag-pool.json strategy-config.json capability-registry.json global-priority.json success-rates.json; do
     if [ -f "$SCRIPT_DIR/$f" ]; then
         cp "$SCRIPT_DIR/$f" "$IDEAS_DIR/"
         echo "  ✅ $f"

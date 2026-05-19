@@ -46,7 +46,7 @@ negative_triggers:
   - 改一行
   - 修bug
   - 配置修改
-version: 8.3.0
+version: 8.3.2
 priority: 110
 role: global_orchestrator
 author: Hermes Agent
@@ -721,6 +721,35 @@ Windows: sys.platform == 'win32'
 关闭: 「关闭调试」「--debug off」
 ```
 
+## 版本查询
+
+```
+触发: 「foundry version」「版本号」「什么版本」
+输出: Idea Foundry v8.3.1 · Lv.110 · 自进化+自适应仲裁
+```
+
+## 自检命令
+
+```
+触发: 「foundry test --self」「自检」「跑一遍自检」
+
+执行流程:
+  ① 自进化链路: 模拟一个不存在的领域标签 → 验证特征分析 → 验证追问弹窗 → 验证写入 tag-pool
+  ② 成功率回写: 模拟一次委派 → 验证 success-rates.json 可读写 → 验证权重重新计算
+  ③ careful 开关: 模拟 Phase 8 → 验证 careful 启用 → 模拟 Phase 11 → 验证 careful 关闭
+  ④ 能力扫描: 扫描本地 Skill 池 → 验证能力映射表构建 → 列出缺失的关键能力
+
+输出格式:
+  自进化链路    ████████████ ✅ 通过
+  成功率回写    ████████████ ✅ 通过
+  careful 开关  ████████████ ✅ 通过
+  能力扫描      ██████████░░ ⚠️ 缺 CAP:DESIGN_REVIEW
+  ────────────────────────────
+  3/4 通过, 1 警告
+```
+
+**纯只读验证，不修改任何状态文件。** 模拟写操作使用临时文件，验证后删除。
+
 ## 配置文件重载
 
 ```
@@ -793,9 +822,16 @@ en_US → 「⚠️ Tag pool config corrupted, using built-in defaults」
 
 ---
 
+## 成功案例
+
+- **Hermes 自省引擎（2026-05-19）** —— 完整 🏆极致成品 流水线：Phase -4→-3→-2→-1→-0.5→brainstorming→writing-plans→execution。产出 v2.2.0 Skill + GitHub 开源。详见 `references/case-self-reflection-engine.md`。
+- **金融子 Agent 分析深度增强（2026-05-18）** —— 金融领域专用流程，详见 brainstorming `references/brainstorming-case-finance-enhancement.md`。
+
 ## 全局调度优先级 · Lv.110
 
 **Idea Foundry 固定抢占全局最高优先级 Lv.110，定位为全局调度中枢。**
+
+> ⚠️ **已知问题 (2026-05-19):** 硬编码 Lv.110 是 v8 的遗留设计。v9 计划改为角色声明制（`role: orchestrator, stage: dispatch`），通过阶段分离与 `hermes-self-reflection`（`role: guard, stage: pre_action`）协作，而非数字竞争。参见 hermes-self-reflection spec 的 v2/v3 路线。
 
 ### 优先级层级
 
@@ -883,3 +919,98 @@ Idea Foundry 内置 `force_primary: true` 标记，**同优先级下依然抢占
 **5. 自保机制**
 
 Foundry 自身不可用时（Skill文件损坏/缺失），自动退化为直接能力匹配模式，不阻断流水线。
+
+---
+
+## 🚨 常见执行违规（来自真实教训）
+
+以下是我（Agent）在执行 idea-foundry 时**实际犯过的错误**，每次加载此 Skill 时必须自检：
+
+### 违规 1：跳过 Phase 输出
+
+**症状：** Phase -4 策略选择后，Phase -3/-2/-1/-0.5 只给一句"扫描通过，S级可达"，不展示完整的能力映射表、领域权重、主干拼接、策略匹配。
+
+**为什么错：** 用户看不到决策过程，无法验证能力匹配是否正确。Foundry 的价值一半在**可观测**，跳过输出等于黑箱操作。
+
+**正确行为：**
+```
+Phase -3 → 完整列出每个能力标签匹配的 Skill + 评分
+Phase -2 → 列出领域分类 + 权重
+Phase -1 → 列出主干流水线 + 插件注入
+Phase -0.5 → 列出每个能力的激活/跳过决策 + 原因
+质量预检 → 完整彩色进度条报告
+```
+
+每阶段至少 8-10 行输出，不可压缩成一行。
+
+### 违规 2：用纯文本代替 clarify() 选择题
+
+**症状：** 设计呈现后问"这部分 OK 吗？继续讲 Skill 行为定义？"——纯文本，没有用 clarify()。
+
+**为什么错：** CLI 环境下用户期望方向键菜单。纯文本问题让用户不知道该选什么、怎么回应。Foundry 文档明确规定 CLI 用 `clarify()` 做方向键菜单。
+
+**正确行为：** 任何需要用户确认/选择的节点，**必须**使用 clarify()：
+- 策略选择 → clarify(choices=[...])
+- 质量预检确认 → clarify(choices=[...])
+- 设计分段确认 → clarify(choices=[...])
+- 方案选择 → clarify(choices=[...])
+
+**唯一例外：** 信息收集型问题（"你的源目录是什么？"）可用纯文本。
+
+### 违规 3：被现有 Skill 话题相似性误导
+
+**症状：** 用户说「帮我做一个AI筛图工具」，Agent 发现了 photo-organizer-pro（AI照片评分），直接加载 brainstorming + photo-organizer-pro 开始设计，跳过了 idea-foundry。
+
+**为什么错：** 已记录在反模式章节，但仍是高频违规。关键判断：用户说的是「做」还是「用」。
+
+### 违规 4：Brainstorming 阶段不用 clarify()
+
+**症状：** 进入 brainstorming 后，每段设计确认都用纯文本，不用 clarify 选择题。
+
+**为什么错：** Brainstorming 规范明确要求「Multiple choice preferred」。即使是子 Skill，也必须遵守自身的交互规范。
+
+### 违规 5：中途切换模式不重走 Phase -3 扫描
+
+**症状：** 用户从⚡极速切到🏆极致，Agent 直接改了模式标签继续，没有重新执行 Phase -3 Skill 扫描和 Phase -0.5 策略裁剪。
+
+**为什么错：** 不同模式的能力激活表完全不同（极速只走 critical，极致走全量）。不重扫 = 用极速的裁剪表跑极致模式，nice-to-have 全漏。
+
+**正确行为：**
+```
+用户说「我要质量优先」/「换极致模式」/「切🏆」
+  → 确认切换
+  → 重跑 Phase -3 (Skill 扫描) + Phase -0.5 (策略裁剪)
+  → 重新输出质量预检报告
+  → clarify() 确认
+  → 继续
+```
+
+### 违规 6：Phase -3 注入「参考类」Skill 标为「互补」
+
+**症状：** 在能力匹配表中把 `memory-system-rules`、`hermes-memory-optimization` 标为「互补注入」，但实际它们仅供设计参考，不是运行时依赖。
+
+**为什么错：** 「互补注入」意味着 Foundry 会主动调度它们，增加不必要的 token 消耗和依赖风险。参考类 Skill 应标为「仅参考」，不进入调度链。
+
+**区分规则：**
+| 标注 | 含义 | 调度？ |
+|------|------|--------|
+| 「互补保留」 | 两个 Skill 互补，都进入调度链 | ✅ |
+| 「仅参考」 | 设计灵感来源，不进入调度链 | ❌ |
+| 「本次新建」 | 当前项目产出 | ❌ (产出物) |
+
+### 违规 7：设计阶段未排查外部依赖
+
+**症状：** 设计自省引擎防偷懒清单时，直接把 `ralph-loop` 写入架构，「checklists/ 依赖 ralph-loop skill」。
+
+**为什么错：** 「借鉴设计灵感」≠「声明为依赖」。用户一句话拆穿——「这不就锁死绑定 ralph-loop 这个 skill 了吗？又不是我独有的，使用率就大大降低了，还有侵权风险。」
+
+**正确行为：**
+- Phase -1 拼接时，对每个注入的 Skill 做依赖审核：
+  - 被调度执行（互补）？→ 保留
+  - 设计灵感/方法论（仅参考）？→ 摘除依赖，内置实现
+- 最终产出必须零外部依赖
+- 灵感来源在 spec 注明即可，不进入运行时依赖链
+
+### 自检清单（每次加载 idea-foundry 时过一遍）
+
+```\n[ ] 用户请求是否触发接管？→ 是 → 继续，否 → 退出\n[ ] Phase -4 是否用了 clarify() 选择策略？→ 是\n[ ] Phase -3/-2/-1/-0.5 是否完整输出了 ≥8 行/阶段？→ 是\n[ ] Phase -1 拼接时是否排查了误标的「参考类」依赖？→ 是\n[ ] 质量预检是否完整展示？→ 是\n[ ] 质量预检确认是否用了 clarify()？→ 是\n[ ] 所有后续用户确认是否用了 clarify()？→ 是\n[ ] 是否有被话题相似的现有 Skill 误导？→ 否\n[ ] 用户切换模式时是否重跑了 Phase -3 + Phase -0.5？→ 是\n[ ] Skill 匹配表中是否有误标为「互补」的「仅参考」Skill？→ 否\n```
