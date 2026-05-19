@@ -1,38 +1,39 @@
-{
-  "name": "idea-foundry",
-  "version": "8.1.1",
-  "description": "全局调度中枢·Lv.110·通用开源级自组装工作流引擎",
-  "author": "Hermes Agent",
-  "license": "MIT",
-  "type": "skill",
-  "priority": 110,
-  "role": "global_orchestrator",
-  "force_primary": true,
-  "hermes_version": ">=1.0.0",
-  "files": {
-    "skill": "SKILL.md",
-    "docs": ["README.md", "CHANGELOG.md"],
-    "configs": ["tag-pool.json", "strategy-config.json", "capability-registry.json", "global-priority.json"],
-    "scripts": {
-      "install": {
-        "unix": "scripts/install.sh",
-        "windows": "scripts/install.ps1"
-      }
-    }
-  },
-  "install": {
-    "skill_dir": "${HERMES_HOME}/skills/software-development/idea-foundry/",
-    "config_dir": "${HERMES_HOME}/ideas/",
-    "log_dir": "${HERMES_HOME}/ideas/logs/"
-  },
-  "capabilities": [
-    "VALIDATE", "SHARPEN", "DESIGN", "DESIGN_REVIEW", "ARCH_REVIEW",
-    "DX_REVIEW", "PLAN", "BREAKDOWN", "IMPLEMENT", "TDD_ENFORCE",
-    "DEBUG", "CODE_REVIEW", "SECOND_OPINION", "SECURITY_SCAN",
-    "BROWSER_TEST", "SECURITY_AUDIT", "CODE_HEALTH",
-    "VERIFY", "SHIP", "DOCUMENT", "RETRO", "LEARN", "CONTEXT_SAVE"
-  ],
-  "strategies": ["perfection", "balanced", "speed"],
-  "presets": ["academic", "finance", "creative"],
-  "keywords": ["workflow", "pipeline", "orchestrator", "self-assembling", "multi-domain", "tdd", "code-review", "qa", "delivery"]
-}
+     1|{
+     2|  "name": "idea-foundry",
+     3|  "version": "8.2.0",
+     4|  "description": "全局调度中枢·Lv.110·通用开源级自组装工作流引擎",
+     5|  "author": "Hermes Agent",
+     6|  "license": "MIT",
+     7|  "type": "skill",
+     8|  "priority": 110,
+     9|  "role": "global_orchestrator",
+    10|  "force_primary": true,
+    11|  "hermes_version": ">=1.0.0",
+    12|  "files": {
+    13|    "skill": "SKILL.md",
+    14|    "docs": ["README.md", "CHANGELOG.md"],
+    15|    "configs": ["tag-pool.json", "strategy-config.json", "capability-registry.json", "global-priority.json"],
+    16|    "scripts": {
+    17|      "install": {
+    18|        "unix": "scripts/install.sh",
+    19|        "windows": "scripts/install.ps1"
+    20|      }
+    21|    }
+    22|  },
+    23|  "install": {
+    24|    "skill_dir": "${HERMES_HOME}/skills/software-development/idea-foundry/",
+    25|    "config_dir": "${HERMES_HOME}/ideas/",
+    26|    "log_dir": "${HERMES_HOME}/ideas/logs/"
+    27|  },
+    28|  "capabilities": [
+    29|    "VALIDATE", "SHARPEN", "DESIGN", "DESIGN_REVIEW", "ARCH_REVIEW",
+    30|    "DX_REVIEW", "PLAN", "BREAKDOWN", "IMPLEMENT", "TDD_ENFORCE",
+    31|    "DEBUG", "CODE_REVIEW", "SECOND_OPINION", "SECURITY_SCAN",
+    32|    "BROWSER_TEST", "SECURITY_AUDIT", "CODE_HEALTH",
+    33|    "VERIFY", "SHIP", "DOCUMENT", "RETRO", "LEARN", "CONTEXT_SAVE"
+    34|  ],
+    35|  "strategies": ["perfection", "balanced", "speed"],
+    36|  "presets": ["academic", "finance", "creative"],
+    37|  "keywords": ["workflow", "pipeline", "orchestrator", "self-assembling", "multi-domain", "tdd", "code-review", "qa", "delivery"]
+    38|}
+    39|

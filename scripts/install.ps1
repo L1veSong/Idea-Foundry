@@ -17,7 +17,7 @@ Write-Host "  ✅ 目录创建完成" -ForegroundColor Green
 # 2. Write config files
 @'
 {
-  "version": "8.1.1",
+  "version": "8.1.0",
   "tags": {
     "engineering": {
       "web": {"trunk": "web-fullstack"},
@@ -56,7 +56,7 @@ Write-Host "  ✅ tag-pool.json" -ForegroundColor Green
 
 @'
 {
-  "version": "8.1.1",
+  "version": "8.1.0",
   "strategies": {
     "perfection": {"name":"🏆 极致成品","capability_scope":["critical","important","nice_to_have","industry"],"dedup":"complementary_keep","degradation":"warn_user"},
     "balanced": {"name":"⚖️ 均衡性价比","capability_scope":["critical","important"],"dedup":"best_per_capability","degradation":"silent_fallback"},
@@ -72,7 +72,7 @@ Write-Host "  ✅ strategy-config.json" -ForegroundColor Green
 
 @'
 {
-  "version": "8.1.1",
+  "version": "8.1.0",
   "capabilities": {
     "critical": ["VALIDATE","SHARPEN","DESIGN","PLAN","IMPLEMENT","VERIFY"],
     "important": ["DESIGN_REVIEW","ARCH_REVIEW","BREAKDOWN","TDD_ENFORCE","DEBUG","CODE_REVIEW","SECURITY_SCAN","BROWSER_TEST","SECURITY_AUDIT","SHIP","CONTEXT_SAVE"],
@@ -85,7 +85,7 @@ Write-Host "  ✅ capability-registry.json" -ForegroundColor Green
 
 @'
 {
-  "version": "8.1.1",
+  "version": "8.1.0",
   "global_priority": {
     "foundry": {"level": 110, "role": "global_orchestrator", "force_primary": true},
     "superpowers": {"level": 100, "role": "fallback"},
