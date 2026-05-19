@@ -1,29 +1,51 @@
-# Publishing Incident Log (2026-05-19)
+# 发布事故记录 — Publishing Incidents
 
-## Mistakes Made
+以下是在 Idea Foundry 开发过程中 Agent 实际犯过的发布事故，每条包含事故、根因、修复、教训。
 
-1. **ZIP not updated before claiming "ready"** — Said v8.2.0 ZIP was ready, but it contained old files from 04:21 timestamp, missing assets/, .github/, and updated content.
+## 事故 1: ZIP 名实不符
 
-2. **Recreated ZIP from scratch instead of desktop package** — Rewrote JSON/SKILL.md files from memory instead of using the verified desktop package as source of truth.
+**日期:** 2026-05-19  
+**症状:** 用户检查 ZIP 发现内容是 v8.2.0，但文件名是 v8.2.1  
+**根因:** v8.2.0 → v8.2.1 更新后，只更新了工作副本和桌面包，忘记重建 ZIP  
+**修复:** 删除旧 ZIP，从桌面包重新压缩  
+**教训:** 版本号变更 = 必须重建 ZIP。不存在「ZIP 自动更新」
 
-3. **`execute_code`'s `write_file` corrupted JSON files** — Wrote `read_file` output (with `LINE_NUM|` prefixes) into files, zeroing out 3 JSON configs and polluting package.json + global-priority.json.
+## 事故 2: JSON 文件被清空为 0 字节
 
-4. **README markdown pollution** — Entire README had `    NN|` prefixes on every line from nested `read_file`→`write_file` cycles. Tables broke (`||` instead of `|`).
+**日期:** 2026-05-19  
+**症状:** tag-pool.json, strategy-config.json, capability-registry.json 全部变为 0 字节  
+**根因:** `execute_code` 的 `write_file` 传入空 content 覆盖了文件  
+**修复:** 从备份恢复  
+**教训:** `execute_code` 的 `write_file` 不检查 content 是否为空。写入前必须验证 content 非空。
 
-5. **Fixed one thing, broke another** — Fixed SKILL.md but corrupted JSONs. Fixed JSONs but polluted README. Never did end-to-end verification.
+## 事故 3: 行号前缀污染
 
-6. **Claimed "ready to publish" 3 times without full audit** — Each time a new issue was found by the user.
+**日期:** 2026-05-19（多次发生）  
+**症状:** README.md 首行出现 `     1|# Idea Foundry...`，JSON 文件出现 `     1|     1|{`  
+**根因:** `read_file` 返回 `LINE_NUM|CONTENT` 格式，该输出被直接作为 `write_file` 的输入  
+**修复:** 用 `re.sub(r'^[ \t]+\d+\|', '', content)` 清除所有行号前缀  
+**教训:** `read_file` 输出 ≠ 文件原文。行号前缀是工具层注入的展示格式，不可写回。
 
-## Root Cause
+## 事故 4: 只修一行漏掉全篇
 
-- `read_file` output format includes `LINE_NUM|CONTENT` — this is for display, NOT for writing back to files
-- `write_file` writes raw bytes — if fed `read_file` output, the line number prefixes become part of the file content
-- No verification step between "write" and "claim done"
+**日期:** 2026-05-19  
+**症状:** 修复 README 首行 `1|` 前缀后宣布「干净了」，用户发现全篇每行仍有 `NN|` 前缀  
+**根因:** 用 `sed '1s/...'` 只修了第 1 行，但污染是全局的  
+**修复:** 改用 `re.sub(MULTILINE)` 全量清洗  
+**教训:** 行号污染从来不是单行问题。检查必须全量，修复必须全量。
 
-## Fixed Rules (now in SKILL.md §发布前审计清单)
+## 事故 5: 桌面 vs 工作副本不同步
 
-1. Never use `read_file` output as `write_file` input
-2. ZIP must be compressed from desktop package via `zip -r`, never hand-assembled
-3. Before claiming "ready", run full audit: versions + JSON + markdown + ZIP-byte-match
-4. Fix one thing → verify entire package
-5. 3 consecutive timeouts → change approach, don't retry
+**日期:** 2026-05-19  
+**症状:** 工作副本是 v8.3.2（多了成功案例+违规规则），桌面包是 v8.3.1  
+**根因:** 更新了部分文件但忘记同步 SKILL.md  
+**修复:** 以工作副本为准，全量 rsync 到桌面  
+**教训:** diff -rq 检查两个目录的一致性，不要靠记忆。
+
+## 事故 6: 三次声称「可以发布」三次发现问题
+
+**日期:** 2026-05-19  
+**症状:** 用户三次要求发布，每次都发现新问题（ZIP 旧、Markdown 格式、桌面不同步）  
+**根因:** 每次只检查了「刚改的那个东西」，没有跑全量审计  
+**修复:** 建立 release-audit-checklist.md，7 项全绿才说可以发布  
+**教训:** 「可以发布」不是一个感觉，是一个 checkable 的状态。没有全量审计 = 没有资格说这句话。
