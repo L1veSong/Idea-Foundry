@@ -147,8 +147,10 @@ idea-foundry/
 支付宝
 </td>
 <td width="50%">
-**🌍 International**
 Bank Transfer
+
+**🌍 International**
+
 | | |
 |---|---|
 | Recipient | J Li |
