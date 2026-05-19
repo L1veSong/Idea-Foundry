@@ -1,6 +1,6 @@
 {
   "name": "idea-foundry",
-  "version": "8.2.1",
+  "version": "8.3.0",
   "description": "全局调度中枢·Lv.110·通用开源级自组装工作流引擎",
   "author": "Hermes Agent",
   "license": "MIT",
@@ -11,8 +11,16 @@
   "hermes_version": ">=1.0.0",
   "files": {
     "skill": "SKILL.md",
-    "docs": ["README.md", "CHANGELOG.md"],
-    "configs": ["tag-pool.json", "strategy-config.json", "capability-registry.json", "global-priority.json"],
+    "docs": [
+      "README.md",
+      "CHANGELOG.md"
+    ],
+    "configs": [
+      "tag-pool.json",
+      "strategy-config.json",
+      "capability-registry.json",
+      "global-priority.json"
+    ],
     "scripts": {
       "install": {
         "unix": "scripts/install.sh",
@@ -26,13 +34,49 @@
     "log_dir": "${HERMES_HOME}/ideas/logs/"
   },
   "capabilities": [
-    "VALIDATE", "SHARPEN", "DESIGN", "DESIGN_REVIEW", "ARCH_REVIEW",
-    "DX_REVIEW", "PLAN", "BREAKDOWN", "IMPLEMENT", "TDD_ENFORCE",
-    "DEBUG", "CODE_REVIEW", "SECOND_OPINION", "SECURITY_SCAN",
-    "BROWSER_TEST", "SECURITY_AUDIT", "CODE_HEALTH",
-    "VERIFY", "SHIP", "DOCUMENT", "RETRO", "LEARN", "CONTEXT_SAVE"
+    "VALIDATE",
+    "SHARPEN",
+    "DESIGN",
+    "DESIGN_REVIEW",
+    "ARCH_REVIEW",
+    "DX_REVIEW",
+    "PLAN",
+    "BREAKDOWN",
+    "IMPLEMENT",
+    "TDD_ENFORCE",
+    "DEBUG",
+    "CODE_REVIEW",
+    "SECOND_OPINION",
+    "SECURITY_SCAN",
+    "BROWSER_TEST",
+    "SECURITY_AUDIT",
+    "CODE_HEALTH",
+    "VERIFY",
+    "SHIP",
+    "DOCUMENT",
+    "RETRO",
+    "LEARN",
+    "CONTEXT_SAVE"
   ],
-  "strategies": ["perfection", "balanced", "speed"],
-  "presets": ["academic", "finance", "creative"],
-  "keywords": ["workflow", "pipeline", "orchestrator", "self-assembling", "multi-domain", "tdd", "code-review", "qa", "delivery"]
+  "strategies": [
+    "perfection",
+    "balanced",
+    "speed"
+  ],
+  "presets": [
+    "academic",
+    "finance",
+    "creative"
+  ],
+  "keywords": [
+    "workflow",
+    "pipeline",
+    "orchestrator",
+    "self-assembling",
+    "multi-domain",
+    "tdd",
+    "code-review",
+    "qa",
+    "delivery"
+  ]
 }

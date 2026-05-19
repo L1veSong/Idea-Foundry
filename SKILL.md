@@ -46,7 +46,7 @@ negative_triggers:
   - 改一行
   - 修bug
   - 配置修改
-version: 8.2.1
+version: 8.3.0
 priority: 110
 role: global_orchestrator
 author: Hermes Agent
@@ -142,6 +142,45 @@ license: MIT
 | 「帮我做一个AI筛图工具」 | idea-foundry（新项目开发） |
 | 「用 photo-organizer 整理我的照片」 | 直接加载 photo-organizer-pro |
 | 「这个筛图功能加个批量导出」 | 直接改代码（已有项目的增量修改） |
+
+---
+
+## 🆕 自进化机制
+
+**Phase -2 检测到未知领域时自动触发。** 这是 v5 承诺的能力，v8.3 正式激活。
+
+### 触发条件
+
+多领域识别完成后，任一领域标签不在 `tag-pool.json` 中。
+
+### 进化流程
+
+```
+1. 标记未知领域 → 分析特征（6维）
+2. 判断类型: 工程主干 or 行业垂直
+3. 生成最小插件包:
+   ├── 标签名（英文slug）
+   ├── 1-2个行业校验规则
+   ├── 0-1个专属阶段
+   └── 必要声明/免责
+4. 追问用户一次: 「检测到新领域『XXX』，是否注册？」
+   ├── 是 → 写入 tag-pool.json → 记录 evolution_log → 继续执行
+   └── 否 → 跳过自进化，本次用通用主干
+```
+
+### 进化日志
+
+`tag-pool.json` 的 `evolution_log` 字段记录每次进化:
+
+```json
+{"ts": "2026-05-19T12:00:00Z", "domain": "astronomy", "type": "industry", "plugins": ["data-accuracy", "unit-conversion"]}
+```
+
+### 安全约束
+
+- 生成的新标签不得覆盖已有标签
+- 插件规则不得包含 `rm -rf` / `sudo` / 网络请求等危险操作
+- 用户可随时「删除标签 XXX」移除误注册的领域
 
 ---
 
@@ -569,7 +608,21 @@ industry:     ACADEMIC_REVIEW FINANCE_COMPLY LEGAL_REVIEW CREATIVE_POLISH PHOTO_
 | 专用>通用 | 25% | 精确命中+1.0 / 模糊覆盖+0.3 / 兜底0 |
 | 版本优先 | 20% | 最新+1.0 / 次新+0.5 / 无版本号0 |
 | 安全评级 | 15% | Safe+1.0 / Low+0.7 / Med+0.4 / High+0.1 / Critical 0 |
-| 历史成功率 | 10% | 历史成功率(无历史→0.5) |
+| 历史成功率 | 10% | 该Skill在此能力上的实际成功率（默认0.5，执行后动态更新） |
+
+### 历史成功率追踪
+
+每次委派执行后，记录结果到 `~/.hermes/ideas/success-rates.json`：
+
+```json
+{
+  "brainstorming": {"CAP:DESIGN": {"success": 12, "total": 14}},
+  "tdd": {"CAP:IMPLEMENT": {"success": 20, "total": 20}},
+  "review": {"CAP:CODE_REVIEW": {"success": 8, "total": 11}}
+}
+```
+
+成功率 = success / total（无记录→默认0.5）。每 10 次委派后重新计算一次权重，写入日志 `WEIGHT_UPDATE` 事件。
 
 ---
 
@@ -787,6 +840,8 @@ Phase 3: 方案设计 → CAP:DESIGN → 加权仲裁 → 委派 brainstorming (
 Phase 5: 架构评审 → CAP:ARCH_REVIEW → 加权仲裁 → 委派 plan-eng-review (0.820)
 Phase 8: 开发实现 → CAP:IMPLEMENT → 加权仲裁 → 委派 tdd (0.910)
 ```
+
+**🛡️ 实现阶段安全保护:** 进入 CAP:IMPLEMENT 时自动启用 `careful`，Phase 11 交付后自动关闭。借用已有安全网，不新增拦截。
 
 **3. 外部工作流降级**
 
