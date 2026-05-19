@@ -1,31 +1,31 @@
-     1|{
-     2|  "version": "8.3.3",
-     3|  "global_priority": {
-     4|    "foundry": {
-     5|      "level": 110,
-     6|      "role": "global_orchestrator",
-     7|      "force_primary": true
-     8|    },
-     9|    "superpowers": {
-    10|      "level": 100,
-    11|      "role": "fallback"
-    12|    },
-    13|    "gstack_autoplan": {
-    14|      "level": 90,
-    15|      "role": "fallback"
-    16|    },
-    17|    "native_workflows": {
-    18|      "level": 20,
-    19|      "role": "last_resort"
-    20|    },
-    21|    "manual_guided": {
-    22|      "level": 0,
-    23|      "role": "ultimate_fallback"
-    24|    }
-    25|  },
-    26|  "dispatch_rules": {
-    27|    "trigger_priority": "idea-foundry always triggers first before any other workflow engine",
-    28|    "sub_skill_delegation": "foundry matches capabilities → delegates to best-scored skill",
-    29|    "external_workflow_fallback": "only when foundry degradation chain is fully exhausted"
-    30|  }
-    31|}
+{
+  "version": "8.3.3",
+  "global_priority": {
+    "foundry": {
+      "level": 110,
+      "role": "global_orchestrator",
+      "force_primary": true
+    },
+    "superpowers": {
+      "level": 100,
+      "role": "fallback"
+    },
+    "gstack_autoplan": {
+      "level": 90,
+      "role": "fallback"
+    },
+    "native_workflows": {
+      "level": 20,
+      "role": "last_resort"
+    },
+    "manual_guided": {
+      "level": 0,
+      "role": "ultimate_fallback"
+    }
+  },
+  "dispatch_rules": {
+    "trigger_priority": "idea-foundry always triggers first before any other workflow engine",
+    "sub_skill_delegation": "foundry matches capabilities → delegates to best-scored skill",
+    "external_workflow_fallback": "only when foundry degradation chain is fully exhausted"
+  }
+}

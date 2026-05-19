@@ -1,79 +1,79 @@
-     1|{
-     2|  "version": "8.3.3",
-     3|  "capabilities": {
-     4|    "critical": [
-     5|      "VALIDATE",
-     6|      "SHARPEN",
-     7|      "DESIGN",
-     8|      "PLAN",
-     9|      "IMPLEMENT",
-    10|      "VERIFY"
-    11|    ],
-    12|    "important": [
-    13|      "DESIGN_REVIEW",
-    14|      "ARCH_REVIEW",
-    15|      "BREAKDOWN",
-    16|      "TDD_ENFORCE",
-    17|      "DEBUG",
-    18|      "CODE_REVIEW",
-    19|      "SECURITY_SCAN",
-    20|      "BROWSER_TEST",
-    21|      "SECURITY_AUDIT",
-    22|      "SHIP",
-    23|      "CONTEXT_SAVE"
-    24|    ],
-    25|    "nice_to_have": [
-    26|      "DX_REVIEW",
-    27|      "SECOND_OPINION",
-    28|      "CODE_HEALTH",
-    29|      "DOCUMENT",
-    30|      "RETRO",
-    31|      "LEARN"
-    32|    ],
-    33|    "industry": [
-    34|      "ACADEMIC_REVIEW",
-    35|      "FINANCE_COMPLY",
-    36|      "LEGAL_REVIEW",
-    37|      "CREATIVE_POLISH",
-    38|      "PHOTO_CHECK"
-    39|    ]
-    40|  },
-    41|  "degradation_chains": {
-    42|    "VALIDATE": [
-    43|      "office-hours",
-    44|      "plan-ceo-review",
-    45|      "brainstorming"
-    46|    ],
-    47|    "BROWSER_TEST": [
-    48|      "qa",
-    49|      "qa-only",
-    50|      "playwright-skill",
-    51|      "browser"
-    52|    ],
-    53|    "IMPLEMENT": [
-    54|      "tdd",
-    55|      "test-driven-development"
-    56|    ],
-    57|    "DEBUG": [
-    58|      "systematic-debugging",
-    59|      "investigate"
-    60|    ],
-    61|    "CODE_REVIEW": [
-    62|      "review",
-    63|      "codex",
-    64|      "requesting-code-review"
-    65|    ],
-    66|    "DESIGN": [
-    67|      "brainstorming",
-    68|      "design-consultation",
-    69|      "idea-superpowers-suite"
-    70|    ]
-    71|  },
-    72|  "selection_priority": [
-    73|    "same_ecosystem",
-    74|    "matt_pocock_over_superpowers",
-    75|    "specialized_over_general",
-    76|    "newer_version",
-    77|    "safe_over_risky"
-    78|  ]
-    79|}
+{
+  "version": "8.3.3",
+  "capabilities": {
+    "critical": [
+      "VALIDATE",
+      "SHARPEN",
+      "DESIGN",
+      "PLAN",
+      "IMPLEMENT",
+      "VERIFY"
+    ],
+    "important": [
+      "DESIGN_REVIEW",
+      "ARCH_REVIEW",
+      "BREAKDOWN",
+      "TDD_ENFORCE",
+      "DEBUG",
+      "CODE_REVIEW",
+      "SECURITY_SCAN",
+      "BROWSER_TEST",
+      "SECURITY_AUDIT",
+      "SHIP",
+      "CONTEXT_SAVE"
+    ],
+    "nice_to_have": [
+      "DX_REVIEW",
+      "SECOND_OPINION",
+      "CODE_HEALTH",
+      "DOCUMENT",
+      "RETRO",
+      "LEARN"
+    ],
+    "industry": [
+      "ACADEMIC_REVIEW",
+      "FINANCE_COMPLY",
+      "LEGAL_REVIEW",
+      "CREATIVE_POLISH",
+      "PHOTO_CHECK"
+    ]
+  },
+  "degradation_chains": {
+    "VALIDATE": [
+      "office-hours",
+      "plan-ceo-review",
+      "brainstorming"
+    ],
+    "BROWSER_TEST": [
+      "qa",
+      "qa-only",
+      "playwright-skill",
+      "browser"
+    ],
+    "IMPLEMENT": [
+      "tdd",
+      "test-driven-development"
+    ],
+    "DEBUG": [
+      "systematic-debugging",
+      "investigate"
+    ],
+    "CODE_REVIEW": [
+      "review",
+      "codex",
+      "requesting-code-review"
+    ],
+    "DESIGN": [
+      "brainstorming",
+      "design-consultation",
+      "idea-superpowers-suite"
+    ]
+  },
+  "selection_priority": [
+    "same_ecosystem",
+    "matt_pocock_over_superpowers",
+    "specialized_over_general",
+    "newer_version",
+    "safe_over_risky"
+  ]
+}
