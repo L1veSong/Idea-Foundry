@@ -137,17 +137,11 @@ idea-foundry/
 ---
 ## ☕ 支持作者
 如果这个项目对你有帮助，欢迎请我喝杯咖啡，你的支持会激励我持续优化迭代。完全自愿，不打赏也不影响任何功能使用。
-<table>
-<tr>
-<td width="50%" align="center">
 **🇨🇳 国内**
-<img src="assets/wechat-pay.png" width="200" alt="微信"><br>
-微信
-<img src="assets/alipay-pay.png" width="200" alt="支付宝"><br>
-支付宝
-</td>
-<td width="50%">
-Bank Transfer
+
+| 微信 | 支付宝 |
+|------|--------|
+| ![微信](assets/wechat-pay.png) | ![支付宝](assets/alipay-pay.png) |
 
 **🌍 International**
 
@@ -157,9 +151,6 @@ Bank Transfer
 | Bank | ERSTE BANK |
 | IBAN | AT41 2011 1845 3888 8800 |
 | BIC / SWIFT | GIBAATWWXXX |
-</td>
-</tr>
-</table>
 ---
 ## 💡 建议与反馈 · Feedback
 有 Bug？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=bug_report.md) · 有想法？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=feature_request.md)
