@@ -1,10 +1,15 @@
 {
-  "version": "8.0.0",
+  "version": "8.2.1",
   "strategies": {
     "perfection": {
       "name": "🏆 极致成品",
       "token_policy": "不惜Token",
-      "capability_scope": ["critical","important","nice_to_have","industry"],
+      "capability_scope": [
+        "critical",
+        "important",
+        "nice_to_have",
+        "industry"
+      ],
       "dedup": "complementary_keep_pure_redundant_drop",
       "surplus_inject": "all_relevant",
       "degradation": "warn_user_if_quality_drops",
@@ -15,7 +20,10 @@
     "balanced": {
       "name": "⚖️ 均衡性价比",
       "token_policy": "适度",
-      "capability_scope": ["critical","important"],
+      "capability_scope": [
+        "critical",
+        "important"
+      ],
       "dedup": "best_per_capability",
       "surplus_inject": "directly_relevant_only",
       "degradation": "silent_fallback",
@@ -26,7 +34,9 @@
     "speed": {
       "name": "⚡ 极速省Token",
       "token_policy": "极度节省",
-      "capability_scope": ["critical"],
+      "capability_scope": [
+        "critical"
+      ],
       "dedup": "single_best_per_capability",
       "surplus_inject": "none",
       "degradation": "auto_accept_any",
@@ -36,28 +46,120 @@
     }
   },
   "capability_cut_matrix": {
-    "VALIDATE":       [true, true, true],
-    "SHARPEN":        [true, true, false],
-    "DESIGN":         [true, true, false],
-    "DESIGN_REVIEW":  [true, false, false],
-    "ARCH_REVIEW":    [true, true, false],
-    "DX_REVIEW":      [true, false, false],
-    "PLAN":           [true, true, "lite"],
-    "BREAKDOWN":      [true, true, false],
-    "IMPLEMENT":      [true, true, true],
-    "TDD_ENFORCE":    [true, true, false],
-    "DEBUG":          [true, true, false],
-    "CODE_REVIEW":    [true, true, true],
-    "SECOND_OPINION": [true, false, false],
-    "SECURITY_SCAN":  [true, true, false],
-    "BROWSER_TEST":   [true, true, false],
-    "SECURITY_AUDIT": [true, true, false],
-    "CODE_HEALTH":    [true, false, false],
-    "VERIFY":         [true, true, true],
-    "SHIP":           [true, true, true],
-    "DOCUMENT":       [true, false, false],
-    "RETRO":          [true, false, false],
-    "LEARN":          [true, false, false],
-    "CONTEXT_SAVE":   [true, true, false]
+    "VALIDATE": [
+      true,
+      true,
+      true
+    ],
+    "SHARPEN": [
+      true,
+      true,
+      false
+    ],
+    "DESIGN": [
+      true,
+      true,
+      false
+    ],
+    "DESIGN_REVIEW": [
+      true,
+      false,
+      false
+    ],
+    "ARCH_REVIEW": [
+      true,
+      true,
+      false
+    ],
+    "DX_REVIEW": [
+      true,
+      false,
+      false
+    ],
+    "PLAN": [
+      true,
+      true,
+      "lite"
+    ],
+    "BREAKDOWN": [
+      true,
+      true,
+      false
+    ],
+    "IMPLEMENT": [
+      true,
+      true,
+      true
+    ],
+    "TDD_ENFORCE": [
+      true,
+      true,
+      false
+    ],
+    "DEBUG": [
+      true,
+      true,
+      false
+    ],
+    "CODE_REVIEW": [
+      true,
+      true,
+      true
+    ],
+    "SECOND_OPINION": [
+      true,
+      false,
+      false
+    ],
+    "SECURITY_SCAN": [
+      true,
+      true,
+      false
+    ],
+    "BROWSER_TEST": [
+      true,
+      true,
+      false
+    ],
+    "SECURITY_AUDIT": [
+      true,
+      true,
+      false
+    ],
+    "CODE_HEALTH": [
+      true,
+      false,
+      false
+    ],
+    "VERIFY": [
+      true,
+      true,
+      true
+    ],
+    "SHIP": [
+      true,
+      true,
+      true
+    ],
+    "DOCUMENT": [
+      true,
+      false,
+      false
+    ],
+    "RETRO": [
+      true,
+      false,
+      false
+    ],
+    "LEARN": [
+      true,
+      false,
+      false
+    ],
+    "CONTEXT_SAVE": [
+      true,
+      true,
+      false
+    ]
   }
 }

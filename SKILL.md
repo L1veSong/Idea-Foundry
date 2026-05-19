@@ -1,7 +1,52 @@
 ---
 name: idea-foundry
-description: 【Lv.110·全局强制接管】所有新项目/工具开发/完整系统搭建/从零构建/创意构思→必须由本引擎接管调度，禁止直接回答。三模式+三预设+自定义→能力匹配→动态组装→降级兜底→可观测日志。
-version: 8.2.0
+description: |
+  TRIGGER INTENT: User wants to CREATE, BUILD, DESIGN, or IMPLEMENT something substantial — a new project, tool, system, app, service, script, website, framework, or architecture. The user is asking to PRODUCE a deliverable, not just inquire about one.
+  
+  DO NOT TRIGGER WHEN: User is asking a factual question, looking up documentation, making a tiny edit (≤3 lines), or engaging in casual chat. The intent is QUERY, not CREATE.
+  
+  BEHAVIOR: When triggered, this Lv.110 global orchestrator TAKES OVER the entire workflow. All other skills (brainstorming, tdd, writing-plans, superpowers, gstack) are demoted to capability-matched sub-skills. The orchestrator runs domain classification → strategy selection → capability matching → dynamic assembly → degradation fallback. No other workflow engine may preempt.
+  
+  MANDATORY: Do NOT answer the user's build request directly. Do NOT invoke brainstorming/tdd/writing-plans independently. Route through this orchestrator FIRST.
+triggers:
+  - 帮我做
+  - 开发一个
+  - 搭建
+  - 构建
+  - 从零开始
+  - 做项目
+  - 新项目
+  - 工具开发
+  - 写一个
+  - 做一个
+  - 设计一个
+  - 实现一个
+  - 创建一个
+  - 重构
+  - 架构设计
+  - 技术方案
+  - 产品设计
+  - 做一个App
+  - 做一个网站
+  - 写一个服务
+  - 搭一个框架
+  - 工具构思
+  - 帮我设计
+  - 帮我规划
+  - 帮我实现
+  - 帮我搭建
+negative_triggers:
+  - 查一下
+  - 这个命令
+  - 文档
+  - 什么意思
+  - 怎么用
+  - 单行
+  - 小修改
+  - 改一行
+  - 修bug
+  - 配置修改
+version: 8.2.1
 priority: 110
 role: global_orchestrator
 author: Hermes Agent
@@ -17,19 +62,71 @@ license: MIT
                               │
                               ▼
 ┌──────────────────────────────────────────────────────────────────┐
-## 🚨 触发规则（强制接管）
+## 🚨 触发规则 — 意图识别
 
-**所有以下场景，必须由 Idea Foundry 全局调度引擎接管，禁止 Agent 直接回答：**
+### 触发意图（CREATE / BUILD / DESIGN / IMPLEMENT）
 
-- 新项目开发 / 工具开发 / 完整系统搭建 / 从零构建
-- 创意构思 / 产品设计 / 技术方案设计 / 重构 / 架构升级
-- 任何涉及多步骤的工程任务
+当用户表达的**核心意图**是以下之一，直接接管：
 
-触发关键词（命中即接管）: 帮我做一个、开发一个、搭建一个、从零开始、做项目、工具构思、设计一个系统、写一个工具、构建、实现一个、创建一个、做一个App、做一个网站、写一个服务、搭一个框架、重构、架构设计、技术方案、产品设计、新项目
+| 意图 | 典型表达 | 本质 |
+|------|---------|------|
+| **CREATE** | 「做一个」「写一个」「建一个」「搞一个」「搭一个」 | 从无到有创造 |
+| **BUILD** | 「帮我开发」「实现这个功能」「构建系统」 | 工程实现 |
+| **DESIGN** | 「帮我设计」「技术方案」「架构怎么弄」 | 方案设计 |
+| **REFACTOR** | 「重构」「重写」「翻新」「升级架构」 | 大规模改造 |
+| **PLAN** | 「规划一下」「怎么入手」「分几步」 | 工程规划 |
 
-直接触发（无需询问）: 命中关键词 / 描述>2句且涉及工程 / 提到技术栈/框架/数据库 / 用户说「帮我做/写/设计/搭建/开发」+ 目标
+### 排除意图（QUERY / CHAT / TWEAK）
 
-仅跳过: 单行命令问答、查文档、≤3行小改
+以下意图**不走本引擎**，直接回答：
+
+| 意图 | 典型表达 | 本质 |
+|------|---------|------|
+| **QUERY** | 「这个命令是什么意思」「X 和 Y 有什么区别」 | 信息查询 |
+| **LOOKUP** | 「帮我查一下文档」「这个 API 怎么用」 | 查阅检索 |
+| **TWEAK** | 「改一行」「修个 bug」「配置调一下」 | 微调修改 |
+| **CHAT** | 「你觉得呢」「讨论一下」「随便聊聊」 | 对话交流 |
+
+### 意图识别规则
+
+```
+1. 核心判断: 「用户要我产出东西，还是回答东西？」
+
+   产出 → 🚨 Foundry 接管
+   回答 → 直接回答
+
+2. 产出量判断: 「产出物是 单行/几行 还是 多文件/多模块？」
+
+   ≤3 行改动 → 直接回答
+   ≥4 行或 多文件 → 🚨 Foundry 接管
+
+3. 模糊判断: 「用户没说要产出，但意图隐含了要产出」
+
+   「我想做一个...但不知道怎么做」 → 🚨 Foundry
+   「帮我分析一下这个方案」 → 判断产出物大小决定
+```
+
+### 无需询问，直接接管
+
+满足以下**任意一个**→ 立即接管，不弹出询问：
+
+- 用户意图 = CREATE / BUILD / DESIGN / REFACTOR / PLAN
+- 预期产出物 ≥ 多文件或多模块
+- 用户明确说「帮我做/开发/搭建/设计/实现」
+
+### 模糊意图 → 一句话确认
+
+满足以下 → 问一句就走：
+
+- 用户说「有个想法」但未描述产出物
+- 边界场景（可能是查询也可能是构建）
+
+确认语: 「检测到构建意图，是否进入锻造流程？」
+
+### 排除场景 → 直接回答
+
+- 意图 = QUERY / LOOKUP / TWEAK / CHAT
+- 预期产出 ≤ 3 行或纯文本
 
 ### ⚠️ 反模式：表面匹配 Skill 干扰
 
@@ -88,9 +185,11 @@ license: MIT
                          执行 + 日志
 ```
 
----
+ 直接回答 → 不接管
 
-## Phase -4: 全局策略选择器
+> 意图识别设计模式详见 `references/intent-based-triggering.md`
+
+## Phase -4: 全局策略选择
 
 ### 三种模式
 
