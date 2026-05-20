@@ -46,7 +46,7 @@ negative_triggers:
   - 改一行
   - 修bug
   - 配置修改
-version: 8.3.3
+version: 8.4.0
 priority: 110
 role: global_orchestrator
 author: Hermes Agent
@@ -738,7 +738,7 @@ Windows: sys.platform == 'win32'
 触发: 「foundry restart」   → 重置, 清除进度从头开始
 ```
 
-> **v8.x 计划:** 方向键菜单增加 `← 上一步` 选项，选择后可回到上一题重选。实现方式：`clarify(choices=[..., "← 上一步"])`，选中后回退一个交互节点。
+**所有 `clarify()` 菜单末尾自动追加 `← 上一步` 选项。** 用户选中后回退到上一个交互节点重选。CLI 环境用方向键 ↑↓ 导航，Web 环境用数字回复。
 
 ## 自检命令
 
