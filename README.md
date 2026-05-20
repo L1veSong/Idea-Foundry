@@ -162,9 +162,9 @@ idea-foundry/
 | BIC / SWIFT | GIBAATWWXXX |
 ---
 ## 💡 建议与反馈
-有 Bug？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=bug_report.md)
+有 Bug？[点此提交](https://github.com/L1veSong/Idea-Foundry/issues/new?template=bug_report.md)
 
-有想法？[点此提交](https://github.com/L1veSong/hermes-idea-foundry/issues/new?template=feature_request.md)
+有想法？[点此提交](https://github.com/L1veSong/Idea-Foundry/issues/new?template=feature_request.md)
 
 我会认真阅读每一条反馈，择优纳入后续版本迭代。
 ---

@@ -843,7 +843,7 @@ en_US → 「⚠️ Tag pool config corrupted, using built-in defaults」
 
 **Idea Foundry 固定抢占全局最高优先级 Lv.110，定位为全局调度中枢。**
 
-> ⚠️ **已知问题 (2026-05-19):** 硬编码 Lv.110 是 v8 的遗留设计。v9 计划改为角色声明制（`role: orchestrator, stage: dispatch`），通过阶段分离与 `hermes-self-reflection`（`role: guard, stage: pre_action`）协作，而非数字竞争。参见 hermes-self-reflection spec 的 v2/v3 路线。
+> ⚠️ **已知问题 (2026-05-19):** 硬编码 Lv.110 是 v8 的遗留设计。v9 计划改为角色声明制（`role: orchestrator, stage: dispatch`），通过阶段分离与 `canon-mnemonic-guard`（`role: guard, stage: pre_action`）协作，而非数字竞争。参见 canon-mnemonic-guard spec 的 v2/v3 路线。
 
 ### 优先级层级
 
