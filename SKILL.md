@@ -1,13 +1,7 @@
 ---
 name: idea-foundry
 description: |
-  TRIGGER INTENT: User wants to CREATE, BUILD, DESIGN, or IMPLEMENT something substantial — a new project, tool, system, app, service, script, website, framework, or architecture. The user is asking to PRODUCE a deliverable, not just inquire about one.
-  
-  DO NOT TRIGGER WHEN: User is asking a factual question, looking up documentation, making a tiny edit (≤3 lines), or engaging in casual chat. The intent is QUERY, not CREATE.
-  
-  BEHAVIOR: When triggered, this Lv.110 global orchestrator TAKES OVER the entire workflow. All other skills (brainstorming, tdd, writing-plans, superpowers, gstack) are demoted to capability-matched sub-skills. The orchestrator runs domain classification → strategy selection → capability matching → dynamic assembly → degradation fallback. No other workflow engine may preempt.
-  
-  MANDATORY: Do NOT answer the user's build request directly. Do NOT invoke brainstorming/tdd/writing-plans independently. Route through this orchestrator FIRST.
+  创建 构建 设计 开发 搭建 实现 编写 制作 重构 新建 生成 做项目 写工具 做App 做网站 写服务 搭框架 从零开始 技术方案 架构设计 产品设计 帮我做 帮我写 帮我设计 帮我开发 帮我搭建 帮我规划 帮我实现 新项目 工具开发 完整系统。TRIGGER INTENT: CREATE, BUILD, DESIGN, IMPLEMENT. BEHAVIOR: role=orchestrator stage=dispatch TAKES OVER workflow. No other engine may preempt.
 triggers:
   - 帮我做
   - 开发一个
@@ -46,14 +40,18 @@ negative_triggers:
   - 改一行
   - 修bug
   - 配置修改
-version: 8.4.0
+version: 9.0.0
 priority: 110
-role: global_orchestrator
+priority_note: "deprecated: v9 uses role-based (role: orchestrator, stage: dispatch). numeric priority removed in v10. other skills: declare role+stage, do not compete on numbers."
+role: orchestrator
+stage: dispatch
 author: Hermes Agent
 license: MIT
 ---
 
-# 创意锻造 · Idea Foundry v8 — 通用开源级自组装引擎
+# 创意锻造 · Idea Foundry v9 — 角色纪元
+
+> **角色声明 · Role Declaration:** v9 正式废除数字优先级。本引擎调度权来自 `role: orchestrator, stage: dispatch`。其他 Skill 声明 `role+stage` 即可协作，无需竞争数字。`priority: 110` 已废弃，v10 移除。
 
 ## 架构全景（最终形态）
 
@@ -727,7 +725,7 @@ Windows: sys.platform == 'win32'
 
 ```
 触发: 「foundry version」「版本号」「什么版本」
-输出: Idea Foundry v8.3.1 · Lv.110 · 自进化+自适应仲裁
+输出: Idea Foundry v9.0.0 · 角色纪元 · role: orchestrator
 ```
 
 ## 交互控制
