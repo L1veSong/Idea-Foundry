@@ -14,7 +14,7 @@
 
 ### v9 核心：角色声明制
 
-废除数字优先级竞争。调度权来自 `role: orchestrator, stage: dispatch`。其他 Skill 声明 `role+stage` 即可协作。
+废除数字优先级竞争（priority: 110 已废弃，v10 移除）。调度权来自 `role: orchestrator, stage: dispatch`。其他 Skill 声明 `role+stage` 即可协作。
 
 ### 功能亮点
 
