@@ -40,18 +40,16 @@ negative_triggers:
   - 改一行
   - 修bug
   - 配置修改
-version: 9.0.0
-priority: 110
-priority_note: "deprecated: v9 uses role-based (role: orchestrator, stage: dispatch). numeric priority removed in v10. other skills: declare role+stage, do not compete on numbers."
+version: 9.0.1
 role: orchestrator
 stage: dispatch
 author: Hermes Agent
 license: MIT
 ---
 
-# 创意锻造 · Idea Foundry v9 — 角色纪元
+# 创意锻造 · Idea Foundry v9.0.1 — 角色纪元
 
-> **角色声明 · Role Declaration:** v9 正式废除数字优先级。本引擎调度权来自 `role: orchestrator, stage: dispatch`。其他 Skill 声明 `role+stage` 即可协作，无需竞争数字。`priority: 110` 已废弃，v10 移除。
+> **角色声明:** v9 正式废除数字优先级。调度权来自 `role: orchestrator, stage: dispatch`。
 
 ## 架构全景（最终形态）
 
@@ -725,7 +723,7 @@ Windows: sys.platform == 'win32'
 
 ```
 触发: 「foundry version」「版本号」「什么版本」
-输出: Idea Foundry v9.0.0 · 角色纪元 · role: orchestrator
+输出: Idea Foundry v9.0.1 · 角色纪元 · role: orchestrator
 ```
 
 ## 交互控制
@@ -837,22 +835,23 @@ en_US → 「⚠️ Tag pool config corrupted, using built-in defaults」
 - **Hermes 自省引擎（2026-05-19）** —— 完整 🏆极致成品 流水线：Phase -4→-3→-2→-1→-0.5→brainstorming→writing-plans→execution。产出 v2.2.0 Skill + GitHub 开源。详见 `references/case-self-reflection-engine.md`。
 - **金融子 Agent 分析深度增强（2026-05-18）** —— 金融领域专用流程，详见 brainstorming `references/brainstorming-case-finance-enhancement.md`。
 
-## 全局调度优先级 · Lv.110
+## 全局调度机制（角色声明制）
 
-**Idea Foundry 固定抢占全局最高优先级 Lv.110，定位为全局调度中枢。**
+**Idea Foundry 以 `role: orchestrator, stage: dispatch` 定位为全局调度中枢。**
 
-> ⚠️ **已知问题 (2026-05-19):** 硬编码 Lv.110 是 v8 的遗留设计。v9 计划改为角色声明制（`role: orchestrator, stage: dispatch`），通过阶段分离与 `canon-mnemonic-guard`（`role: guard, stage: pre_action`）协作，而非数字竞争。参见 canon-mnemonic-guard spec 的 v2/v3 路线。
+> **角色声明制 (v9):** 废除数字优先级。CMG 以 `role: guard, stage: pre_action` 在 Foundry 之前执行护栏检查，Foundry 以 `role: orchestrator, stage: dispatch` 接管调度。通过阶段分离协作，非数字竞争。
 
-### 优先级层级
+### 调度层级（角色声明制）
 
 ```
-Lv.110  Idea Foundry (本引擎)        ← 全局调度中枢，最先触发
-Lv.100  领域子流程                     ← Foundry内部路由
-Lv.80   能力匹配的Skill (主)           ← Foundry调度执行
-Lv.60   能力匹配的Skill (辅)           ← 互补注入
-Lv.40   降级替代Skill                  ← 缺容时启用
-Lv.20   外部原生工作流                  ← 仅作备选降级
-Lv.0    人工引导模式                   ← 最后兜底
+role: orchestrator, stage: dispatch   Idea Foundry (本引擎)  ← 全局调度中枢
+    │
+    ├── 领域子流程                    ← Foundry 内部路由
+    ├── 能力匹配的 Skill (主)         ← Foundry 调度执行
+    ├── 能力匹配的 Skill (辅)         ← 互补注入
+    ├── 降级替代 Skill                ← 缺失时启用
+    ├── 外部原生工作流                ← 仅作备选降级
+    └── 人工引导模式                  ← 最后兜底
 ```
 
 ### 调度规则
@@ -865,7 +864,7 @@ Lv.0    人工引导模式                   ← 最后兜底
 用户需求
     │
     ▼
-Idea Foundry (Lv.110) ← 最先触发，抢占控制权
+Idea Foundry (orchestrator) ← 最先触发，抢占控制权
     │
     ├── 领域识别 → 策略选择 → 能力匹配
     │
@@ -896,8 +895,8 @@ Phase 8: 开发实现 → CAP:IMPLEMENT → 加权仲裁 → 委派 tdd (0.910)
 ```
 CAP:DESIGN 缺 brainstorming, design-consultation, idea-superpowers-suite
   → 降级链耗尽
-  → 启用备选: 外部原生 brainstorming 工作流 (Lv.20)
-  → 🧑 人工引导 (Lv.0)
+  → 启用备选: 外部原生 brainstorming 工作流
+  → 🧑 人工引导 (最后兜底)
 ```
 
 **4. 调度冲突解决**
@@ -906,10 +905,10 @@ CAP:DESIGN 缺 brainstorming, design-consultation, idea-superpowers-suite
 
 | 优先级 | 引擎 | 处理 |
 |--------|------|------|
-| Lv.110 | Idea Foundry | 始终优先 |
-| Lv.100 | Superpowers (idea-superpowers-suite) | 降级为Foundry的CAP:PLAN匹配Skill |
-| Lv.90 | GStack (autoplan) | 降级为Foundry的CAP:SHARPEN+DESIGN_REVIEW+ARCH_REVIEW匹配Skill |
-| Lv.50 | 原生 brainstorming→TDD链路 | 降级为Foundry的独立能力Skill |
+| 调度中枢 | Idea Foundry | 始终优先（role: orchestrator） |
+| 外部引擎 | Superpowers (idea-superpowers-suite) | 降级为Foundry的CAP:PLAN匹配Skill |
+| 外部引擎 | GStack (autoplan) | 降级为Foundry的CAP:SHARPEN+DESIGN_REVIEW+ARCH_REVIEW匹配Skill |
+| 原生链路 | 原生 brainstorming→TDD链路 | 降级为Foundry的独立能力Skill |
 
 **同优先级仲裁规则：** 当多个引擎声明相同优先级时，按以下顺序自动排序：
 
@@ -926,7 +925,7 @@ Idea Foundry 内置 `force_primary: true` 标记，**同优先级下依然抢占
 关闭: 「取消独占」「允许其他引擎」「解锁Foundry」
 ```
 
-**5. 自保机制**
+**修改本 Skill 前必须加载 `writing-skills` 走 TDD 流程，发布前必须加载 `hermes-agent-skill-authoring` 跑 PRE-RELEASE GATE。已在 CMG rules/ban/ 下永久记录违规。**
 
 Foundry 自身不可用时（Skill文件损坏/缺失），自动退化为直接能力匹配模式，不阻断流水线。
 
@@ -1040,3 +1039,29 @@ Phase -0.5 → 列出每个能力的激活/跳过决策 + 原因
 ### 自检清单（每次加载 idea-foundry 时过一遍）
 
 ```\n[ ] 用户请求是否触发接管？→ 是 → 继续，否 → 退出\n[ ] Phase -4 是否用了 clarify() 选择策略？→ 是\n[ ] Phase -3/-2/-1/-0.5 是否完整输出了 ≥8 行/阶段？→ 是\n[ ] Phase -1 拼接时是否排查了误标的「参考类」依赖？→ 是\n[ ] 质量预检是否完整展示？→ 是\n[ ] 质量预检确认是否用了 clarify()？→ 是\n[ ] 所有后续用户确认是否用了 clarify()？→ 是\n[ ] 是否有被话题相似的现有 Skill 误导？→ 否\n[ ] 用户切换模式时是否重跑了 Phase -3 + Phase -0.5？→ 是\n[ ] Skill 匹配表中是否有误标为「互补」的「仅参考」Skill？→ 否\n```
+
+---
+
+## 后续版本规划（v10+）
+
+> 以下方向来自外部评审（豆包 AI）与实战反馈。非紧急，积累至下个大版本统一发布。
+
+| # | 方向 | 说明 | 涉及 |
+|---|------|------|------|
+| F1 | 循环依赖检测 | Phase -1 拼接时检测 A→B→A 环路，警告用户 | Phase -1 |
+| F2 | 超时控制 | 委派子 Skill 执行超时（如 600s）→ 自动降级下一候选 | Phase 执行 |
+
+### 已排除
+
+| 建议 | 排除原因 |
+|------|---------|
+| 事务性/回滚 | 跨 Skill 事务在 Hermes 架构下不现实 |
+| 数据适配层 | 复杂的输入输出规范化不属于调度器职责 |
+| 崩溃恢复 | Hermes 会话级恢复已覆盖，IF 无需重复实现 |
+
+### 已知缺口
+
+| # | 缺口 | 影响 | 优先级 |
+|---|------|------|:---:|
+| G1 | `idea-superpowers-suite` 子 skill 未安装 | CAP:DESIGN 降级链第三级断档（前两级 brainstorming/design-consultation 已兜底，非阻塞） | 低 |
+| G2 | `priority: 110` 数字优先级已从 frontmatter 移除 | v9 已清理 | - |

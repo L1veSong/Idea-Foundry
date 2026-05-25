@@ -1,3 +1,30 @@
+## v9.0.1 (2026-05-25) — 数字优先级彻底移除
+
+### 🧹 清理
+- **frontmatter**: 删除 `priority: 110` 和 `priority_note` 字段
+- **global-priority.json**: 删除所有 `level` 字段，仅保留 `role`
+- **SKILL.md**: 「全局调度优先级·Lv.110」→「全局调度机制（角色声明制）」
+- **调度冲突表**: Lv.110/100/90/50 → role 标签
+
+### 📝 文档同步
+- README 调度层级图同步为角色声明制
+- CHANGELOG 补全 v9.0.0 缺失条目
+
+---
+
+## v9.0.0 (2026-05-23) — 角色纪元
+
+### 🕊️ 角色声明制
+- 废除数字优先级: `priority: 110` → `role: orchestrator, stage: dispatch`
+- CMG 联动: Guard `stage: pre_action` → IF `stage: dispatch`，阶段分离协作
+- 新 skill 加入只需声明 role+stage，无需数字竞争
+
+### 📦 发布
+- 成品包: SKILL.md(1042行) + README + CHANGELOG + 6 JSON配置
+- 一键安装: `bash scripts/install.sh`
+
+---
+
 ## v8.3.3 (2026-05-19) — Darwin 亮点提取
 
 - ⛔ **检查点铁则**: 结构化执行规则表（Darwin 唯一正面产出，手工提取嵌入）
@@ -40,8 +67,6 @@
 - ☕ 打赏模块: 真实微信/支付宝收款码 + 奥地利银行信息
 - 📋 Issue 模板: bug_report.md + feature_request.md + config.yml
 - 📖 README: 修复代码块断裂、补全文件结构、Feedback 直连模板链接
-
-# Changelog
 
 ## v8.2.0 (2026-05-19) — 开源发布版
 

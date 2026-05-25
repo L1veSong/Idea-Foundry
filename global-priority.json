@@ -2,24 +2,19 @@
   "version": "9.0.0",
   "global_priority": {
     "foundry": {
-      "level": 110,
       "role": "global_orchestrator",
       "force_primary": true
     },
     "superpowers": {
-      "level": 100,
       "role": "fallback"
     },
     "gstack_autoplan": {
-      "level": 90,
       "role": "fallback"
     },
     "native_workflows": {
-      "level": 20,
       "role": "last_resort"
     },
     "manual_guided": {
-      "level": 0,
       "role": "ultimate_fallback"
     }
   },
