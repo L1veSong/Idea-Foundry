@@ -6,7 +6,7 @@ def audit(package_dir):
     errors = []
     expected = [
         "SKILL.md","README.md","CHANGELOG.md","package.json",
-        "tag-pool.json","strategy-config.json","capability-registry.json","global-priority.json",
+        "tag-pool.json","strategy-config.json","capability-registry.json","domain-registry.json","success-rates.json","global-priority.json",
         "scripts/install.sh","scripts/install.ps1"
     ]
     
@@ -40,7 +40,7 @@ def audit(package_dir):
         parts = fh.read().split("---", 2)
     if len(parts) >= 3:
         fm = yaml.safe_load(parts[1])
-        for k in ["name","version","priority","description"]:
+        for k in ["name","version","role","stage","description"]:
             if k not in fm: errors.append(f"SKILL_FM_NO_{k}")
     
     if errors:
