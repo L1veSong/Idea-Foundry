@@ -112,27 +112,27 @@ role: ultimate_fallback 人工引导          ← 最后兜底
 idea-foundry/
 ├── SKILL.md                     # 核心引擎
 ├── README.md                    # 本文档
-├── CHANGELOG.md                 # v1→v9.0.1 完整迭代记录
+├── CHANGELOG.md                 # v1→v9.1.0 完整迭代记录
 ├── package.json                 # 包清单
-├── assets/
-│   ├── wechat-pay.png           # 微信赞赏码
-│   └── alipay-pay.png           # 支付宝收款码
-├── .github/
-│   └── ISSUE_TEMPLATE/
-│       ├── bug_report.md        # Bug 报告模板
-│       ├── feature_request.md   # 功能建议模板
-│       └── config.yml           # Issue 配置
+├── references/                  # 方法论文档集
 ├── scripts/
 │   ├── install.sh               # macOS/Linux 一键安装
 │   └── install.ps1              # Windows 一键安装
 ├── tag-pool.json                # 领域标签池
 ├── strategy-config.json         # 策略模式 + 弹窗阈值
 ├── capability-registry.json     # 能力注册表
+├── domain-registry.json         # 领域注册表
+├── success-rates.json           # 成功率记录
 └── global-priority.json         # 全局调度角色配置
 ```
 ---
 ## 版本
-当前: **v9.0.1 — 角色纪元**
+当前: **v9.1.0 — 方法集**
+
+### v9.1.0 变更
+
+- 🆕 REVIEW 精简路径 + 方法论文档 ×6 + 文档导航索引 + Skill Gap 报告
+- 🧹 移除已弃用的支持作者模块；版本号对齐修复（4 个配置文件 → 9.1.0）
 
 ### v9.0.1 变更
 
@@ -142,23 +142,6 @@ idea-foundry/
 - 🔧 **调度冲突解决表**: 数字等级 → 角色标签
 
 详见 [CHANGELOG.md](CHANGELOG.md)
----
-## ☕ 支持作者
-如果这个项目对你有帮助，欢迎请我喝杯咖啡，你的支持会激励我持续优化迭代。完全自愿，不打赏也不影响任何功能使用。
-**🇨🇳 国内**
-
-| 微信 | 支付宝 |
-|------|--------|
-| <img src="assets/wechat-pay.png" width="180"> | <img src="assets/alipay-pay.png" width="180"> |
-
-**🌍 International**
-
-| | |
-|---|---|
-| Recipient | J Li |
-| Bank | ERSTE BANK |
-| IBAN | AT41 2011 1845 3888 8800 |
-| BIC / SWIFT | GIBAATWWXXX |
 ---
 ## 💡 建议与反馈
 有 Bug？[点此提交](https://github.com/L1veSong/Idea-Foundry/issues/new?template=bug_report.md)

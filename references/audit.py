@@ -7,9 +7,6 @@ def audit(package_dir):
     expected = [
         "SKILL.md","README.md","CHANGELOG.md","package.json",
         "tag-pool.json","strategy-config.json","capability-registry.json","global-priority.json",
-        "assets/wechat-pay.png","assets/alipay-pay.png",
-        ".github/ISSUE_TEMPLATE/bug_report.md",".github/ISSUE_TEMPLATE/feature_request.md",
-        ".github/ISSUE_TEMPLATE/config.yml",
         "scripts/install.sh","scripts/install.ps1"
     ]
     
