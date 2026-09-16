@@ -864,7 +864,7 @@ en_US → 「⚠️ Tag pool config corrupted, using built-in defaults」
 - **Hermes 自省引擎（2026-05-19）** —— 完整 极致成品 流水线：Phase -4→-3→-2→-1→-0.5→brainstorming→writing-plans→execution。产出 v2.2.0 Skill + GitHub 开源。详见 `references/case-self-reflection-engine.md`。
 - **skill-matcher 插件设计逼问（2026-06-04）** —— 用 8 维逼问法审查 A+B 混合架构，暴露 8 个盲区并全部决策落地。方法论见 `references/design-grill-methodology.md`。
 - **教育学会论文需求逼问（2026-06-05）** —— 8 维逼问法适配论文写作场景，暴露素材来源、多篇差异化、格式规范等盲区并全量决策。方法论见 `references/paper-grill-methodology.md`。
-- **金融子 Agent 分析深度增强（2026-05-18）** —— 金融领域专用流程，详见 brainstorming `references/brainstorming-case-finance-enhancement.md`。
+- **金融子 Agent 分析深度增强（2026-05-18）** —— 金融领域专用流程，详见 brainstorming 技能内的 `brainstorming-case-finance-enhancement.md`。
 - **Go CLI → HTTP 封装模式（2026-06-24）** —— main() 替换法：算法代码不动、只换入口。Go CLI 封装为 REST API 供 Agent 调用。详见 `references/go-cli-to-http-wrapper.md`。
 - **心理物理检测系统（2026-06-24）** —— 完整 Ph-4→brainstorming→设计文档。Go QUEST+ 算法 + Hermes + MCP + REST API 四层架构，Mac Mini 局域网部署。产出设计文档 `~/.hermes/plans/psychophysics-test/design.md`。
 
